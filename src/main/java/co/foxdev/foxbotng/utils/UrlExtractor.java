@@ -17,6 +17,10 @@
 
 package co.foxdev.foxbotng.utils;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,5 +38,18 @@ public class UrlExtractor {
         if (matcher.matches())
             return matcher.group(1);
         return null;
+    }
+
+    public static String parseUrlForTitle(String url) {
+        try {
+            Document doc = Jsoup.connect(url).followRedirects(true).maxBodySize(655360).timeout(5000).get();
+            String title = doc.title();
+            if (title.isEmpty()) {
+                title = "No title";
+            }
+            return title.substring(0, title.length() >= 100 ? 100 : title.length());
+        } catch (IOException e) {
+            return e.getLocalizedMessage();
+        }
     }
 }

@@ -51,4 +51,9 @@ public class UrlExtractorTest {
         assertEquals("https://google.com", UrlExtractor.getFrom("https://google.com"));
         assertEquals("https://google.com", UrlExtractor.getFrom("aaaa https://google.com 1234"));
     }
+
+    @Test
+    public void shouldParseTitle() {
+        assertEquals("Google", UrlExtractor.parseUrlForTitle("https://google.com"));
+    }
 }

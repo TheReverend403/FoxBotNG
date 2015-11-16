@@ -1,0 +1,12 @@
+servers {
+    foxdev {
+        nick: FoxBotNG
+        ident: bot
+        realname: FoxBotNG
+        host: i.forgot.to.configure.my.bot
+        port: 6667
+        ssl: false
+        validate-ssl: false
+        channels: ["#foxdev"]
+    }
+}

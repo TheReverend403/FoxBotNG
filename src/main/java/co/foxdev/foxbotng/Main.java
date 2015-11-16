@@ -18,7 +18,8 @@
 package co.foxdev.foxbotng;
 
 public class Main {
-    public static void main(String[] args) {
-        System.out.println("If you see this, it means Gradle worked.");
+    public static void main(final String[] args) {
+        System.setProperty("config.file", System.getProperty("user.dir") + "/foxbot.conf");
+        new FoxBotNG();
     }
 }

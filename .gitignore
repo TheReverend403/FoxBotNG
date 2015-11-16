@@ -22,3 +22,6 @@ gradle-app.setting
 
 # Cache of project
 .gradletasknamecache
+
+# Ignore local config
+foxbot.conf
