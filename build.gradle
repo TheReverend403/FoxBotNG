@@ -1,0 +1,46 @@
+group 'uk.co.revthefox.foxbotng'
+def mainClassName = 'uk.co.revthefox.foxbotng.Main'
+
+apply plugin: 'java'
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "com.cinnober.gradle:semver-git:2.2.2"
+    }
+}
+
+ext.snapshotSuffix = '<count>.g<sha>-SNAPSHOT'
+apply plugin: "com.cinnober.gradle.semver-git"
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    compile 'org.jsoup:jsoup:1.8.3'
+    testCompile 'org.testng:testng:6.9.4'
+}
+
+jar {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    manifest {
+        attributes 'Main-Class': mainClassName,
+                'Implementation-Version': version,
+                'Built-Date': new Date(),
+                'Built-By': System.getProperty('user.name'),
+                'Build-Host': InetAddress.localHost.canonicalHostName,
+                'Built-JDK': System.getProperty('java.version')
+    }
+}
+
+test {
+    useTestNG()
+}
