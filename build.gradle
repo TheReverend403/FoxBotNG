@@ -42,5 +42,7 @@ jar {
 }
 
 test {
-    useTestNG()
+    useTestNG {
+        useDefaultListeners = true
+    }
 }
