@@ -18,4 +18,6 @@ Note: Your jar may be named differently depending on whether you compiled from s
 
 If you have no foxbot.conf.dist (almost definitely the case if you downloaded a binary), save a copy from https://raw.githubusercontent.com/FoxDev/FoxBotNG/master/foxbot.conf.dist to foxbot.conf.
 
+The bot looks for it's config in the same folder as the jar, so make sure they're together.
+
 Automatic generation of a default config may be worked on in future.
