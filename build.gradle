@@ -1,5 +1,5 @@
 group 'uk.co.revthefox.foxbotng'
-def mainClassName = 'uk.co.revthefox.foxbotng.Main'
+def mainClassName = 'Main'
 
 apply plugin: 'java'
 
