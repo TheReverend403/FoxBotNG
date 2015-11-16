@@ -40,7 +40,6 @@ dependencies {
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'org.kitteh.irc:client-lib:0.3.6'
     compile "org.projectlombok:lombok:1.16.6"
-    compile 'commons-io:commons-io:2.4'
     testCompile 'org.testng:testng:6.9.4'
 }
 
