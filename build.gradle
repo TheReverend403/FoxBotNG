@@ -10,7 +10,11 @@ def getVersionName = { ->
             commandLine 'git', 'describe', '--tags', '--dirty'
             standardOutput = stdout
         }
-        return stdout.toString().trim()
+        def ver = stdout.toString().trim()
+        if (System.getenv("BUILD_NUMBER") != null) {
+            ver += '-b' + System.getenv("BUILD_NUMBER")
+        }
+        return ver;
     }
     catch (ignored) {
         return null;
