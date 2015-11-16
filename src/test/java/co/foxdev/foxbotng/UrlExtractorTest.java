@@ -41,7 +41,6 @@ public class UrlExtractorTest {
 
     @Test
     public void shouldContainUrl() {
-
         assertTrue(UrlExtractor.hasUrl("https://google.com"));
         assertTrue(UrlExtractor.hasUrl("aaaa https://google.com 1234"));
     }

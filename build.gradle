@@ -1,12 +1,25 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "http://dl.bintray.com/palantir/releases"
+        }
+    }
+    dependencies {
+        classpath 'com.palantir:gradle-gitsemver:0.6.0'
+    }
+}
+
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '1.2.2'
-    id 'com.cinnober.gradle.semver-git' version '2.2.2'
 }
 
 group 'co.foxdev.foxbotng'
 def mainClassName = 'co.foxdev.foxbotng.Main'
-ext.snapshotSuffix = '<count>.g<sha>-SNAPSHOT'
+
+apply plugin: 'gitsemver'
+version semverVersion()
 
 repositories {
     mavenCentral()
