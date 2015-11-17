@@ -36,7 +36,7 @@ public class ChannelListener {
         User actor = event.getActor();
         Channel channel = event.getChannel();
 
-        String logMessage = String.format("[%s] JOIN: %s %s",
+        String logMessage = String.format("[%s] JOIN %s %s",
                 event.getClient().getServerInfo().getAddress().orElse("unknown"),
                 channel.getName(),
                 actor.getNick());
@@ -48,7 +48,7 @@ public class ChannelListener {
         User actor = event.getActor();
         Channel channel = event.getChannel();
 
-        String logMessage = String.format("[%s] PART: %s %s (%s)",
+        String logMessage = String.format("[%s] PART %s %s (%s)",
                 event.getClient().getServerInfo().getAddress().orElse("unknown"),
                 channel.getName(),
                 actor.getNick(),
@@ -61,7 +61,7 @@ public class ChannelListener {
         User actor = event.getActor();
         Channel channel = event.getChannel();
 
-        String logMessage = String.format("[%s] KICK: %s %s -> %s (%s)",
+        String logMessage = String.format("[%s] KICK %s %s -> %s (%s)",
                 event.getClient().getServerInfo().getAddress().orElse("unknown"),
                 channel.getName(),
                 actor.getNick(),
@@ -74,7 +74,7 @@ public class ChannelListener {
     public void onChannelTopic(ChannelTopicEvent event) {
         Channel channel = event.getChannel();
 
-        String logMessage = String.format("[%s] TOPIC: %s %s",
+        String logMessage = String.format("[%s] TOPIC %s %s",
                 event.getClient().getServerInfo().getAddress().orElse("unknown"),
                 channel.getName(),
                 channel.getTopic().getValue().orElse("(none)"));
@@ -86,11 +86,11 @@ public class ChannelListener {
         Actor actor = event.getActor();
         Channel channel = event.getChannel();
 
-        String logMessage = String.format("[%s] MODE: %s %s %s",
+        String logMessage = String.format("[%s] MODE %s -> %s %s",
                 event.getClient().getServerInfo().getAddress().orElse("unknown"),
                 actor.getName(),
-                event.getStatusList().getStatusString(),
-                channel.getName());
+                channel.getName(),
+                event.getStatusList().getStatusString());
         bot.getLogger().info(logMessage);
     }
 }

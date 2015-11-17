@@ -39,8 +39,6 @@ public class ClientConfig {
     @Getter
     private boolean ssl;
     @Getter
-    private boolean validateSsl;
-    @Getter
     private List<String> channels;
     @Getter
     private Map<String, String> ctcpReplies = new HashMap<>();
@@ -52,7 +50,6 @@ public class ClientConfig {
         this.host = config.getString("host");
         this.port = config.getInt("port");
         this.ssl = config.getBoolean("ssl");
-        this.validateSsl = config.getBoolean("validate-ssl");
         this.channels = config.getStringList("channels");
         ConfigObject ctcpConfig = config.getObject("ctcp-replies");
         for (String ctcpReply : ctcpConfig.keySet()) {

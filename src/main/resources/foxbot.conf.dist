@@ -1,15 +1,20 @@
 servers {
     foxdev {
         nick: FoxBotNG
+        // The bot's ident. Also known as user or login.
         ident: bot
         realname: FoxBotNG
+        // The host to connect to.
         host: i.forgot.to.configure.my.bot
         port: 6667
+        // Whether to use SSL. Read the readme to learn how to make this work with self-signed/untrusted certificates.
         ssl: false
-        validate-ssl: false
+        // A list of channels to connect to on startup.
         channels: ["#foxdev"]
+        // When the bot receives a CTCP, it responds with the message from here.
         ctcp-replies {
             time: "Kitty time!"
         }
     }
+    // You can specify more servers by simply copying the syntax above in multiple blocks
 }
