@@ -8,5 +8,8 @@ servers {
         ssl: false
         validate-ssl: false
         channels: ["#foxdev"]
+        ctcp-replies {
+            time: "Kitty time!"
+        }
     }
 }

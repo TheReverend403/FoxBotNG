@@ -18,10 +18,12 @@
 package co.foxdev.foxbotng.listeners;
 
 import co.foxdev.foxbotng.FoxBotNG;
+import co.foxdev.foxbotng.config.ClientConfig;
 import co.foxdev.foxbotng.utils.UrlExtractor;
 import org.kitteh.irc.client.library.element.Channel;
 import org.kitteh.irc.client.library.element.User;
 import org.kitteh.irc.client.library.event.channel.ChannelMessageEvent;
+import org.kitteh.irc.client.library.event.user.PrivateCTCPQueryEvent;
 import org.kitteh.irc.client.library.event.user.PrivateMessageEvent;
 import org.kitteh.irc.lib.net.engio.mbassy.listener.Handler;
 
@@ -60,5 +62,21 @@ public class MessageListener {
                 actor.getNick(),
                 event.getMessage());
         bot.getLogger().info(logMessage);
+    }
+
+    @Handler
+    public void onCtcp(PrivateCTCPQueryEvent event) {
+        User actor = event.getActor();
+
+        String logMessage = String.format("[%s] <%s> CTCP %s",
+                event.getClient().getServerInfo().getAddress().orElse("unknown"),
+                actor.getNick(),
+                event.getMessage());
+        bot.getLogger().info(logMessage);
+
+        ClientConfig clientConfig = bot.getConfigManager().getClientConfig(event.getClient());
+        if (clientConfig.getCtcpReplies().containsKey(event.getMessage().toLowerCase())) {
+            event.setReply(clientConfig.getCtcpReplies().get(event.getMessage().toLowerCase()));
+        }
     }
 }
