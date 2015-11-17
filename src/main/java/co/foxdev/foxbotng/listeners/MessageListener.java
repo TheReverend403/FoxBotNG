@@ -75,8 +75,8 @@ public class MessageListener {
         bot.getLogger().info(logMessage);
 
         ClientConfig clientConfig = bot.getClientManager().getClientConfig(event.getClient());
-        if (clientConfig.getCtcpReplies().containsKey(event.getMessage().toLowerCase())) {
-            event.setReply(clientConfig.getCtcpReplies().get(event.getMessage().toLowerCase()));
+        if (clientConfig.getBotCtcpReplies().containsKey(event.getMessage().toLowerCase())) {
+            event.setReply(clientConfig.getBotCtcpReplies().get(event.getMessage().toLowerCase()));
         }
     }
 }
