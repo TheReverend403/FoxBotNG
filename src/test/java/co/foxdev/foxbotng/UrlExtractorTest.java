@@ -17,10 +17,10 @@
 
 package co.foxdev.foxbotng;
 
-import org.testng.annotations.Test;
 import co.foxdev.foxbotng.utils.UrlExtractor;
+import org.junit.Test;
 
-import static org.testng.Assert.*;
+import static org.junit.Assert.*;
 
 public class UrlExtractorTest {
     @Test

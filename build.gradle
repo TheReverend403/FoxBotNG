@@ -40,7 +40,7 @@ dependencies {
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'org.kitteh.irc:client-lib:0.3.6'
     compile "org.projectlombok:lombok:1.16.6"
-    testCompile 'org.testng:testng:6.9.4'
+    testCompile 'junit:junit:4.12'
 }
 
 jar {
@@ -55,11 +55,5 @@ jar {
                 'Built-By': System.getProperty('user.name'),
                 'Build-Host': InetAddress.localHost.canonicalHostName,
                 'Built-JDK': System.getProperty('java.version')
-    }
-}
-
-test {
-    useTestNG {
-        useDefaultListeners = true
     }
 }
