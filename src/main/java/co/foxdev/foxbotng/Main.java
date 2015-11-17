@@ -19,7 +19,6 @@ package co.foxdev.foxbotng;
 
 public class Main {
     public static void main(final String[] args) {
-        System.setProperty("config.file", System.getProperty("user.dir") + "/foxbot.conf");
         new FoxBotNG();
     }
 }
