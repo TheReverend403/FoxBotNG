@@ -26,37 +26,47 @@ import java.util.Map;
 
 public class ClientConfig {
     @Getter
-    private String nick;
+    private String botNick;
     @Getter
-    private String ident;
+    private String botIdent;
     @Getter
-    private String realname;
+    private String botRealname;
     @Getter
-    private String host;
+    private Map<String, String> botCtcpReplies = new HashMap<>();
+
     @Getter
-    private int port;
+    private String serverHost;
     @Getter
-    private boolean ssl;
+    private int serverPort;
+    @Getter
+    private boolean serverSsl;
+    @Getter
+    private String serverPassword;
     @Getter
     private List<String> channels;
-    @Getter
-    private Map<String, String> ctcpReplies = new HashMap<>();
 
     /**
      * Builds a ClientConfig
      * @param config A TypeSafe Config library Config object to get settings from
      */
     public ClientConfig(Config config) {
-        this.nick = config.getString("nick");
-        this.ident = config.getString("ident");
-        this.realname = config.getString("realname");
-        this.host = config.getString("host");
-        this.port = config.getInt("port");
-        this.ssl = config.getBoolean("ssl");
-        this.channels = config.getStringList("channels");
-        Config ctcpConfig = config.getConfig("ctcp-replies");
+        // Bot
+        Config botConfig = config.getConfig("bot");
+        this.botNick = botConfig.getString("nick");
+        this.botIdent = botConfig.getString("ident");
+        this.botRealname = botConfig.getString("realname");
+
+        Config ctcpConfig = botConfig.getConfig("ctcp-replies");
         for (String ctcpReply : ctcpConfig.root().keySet()) {
-            this.ctcpReplies.put(ctcpReply, ctcpConfig.getString(ctcpReply));
+            this.botCtcpReplies.put(ctcpReply, ctcpConfig.getString(ctcpReply));
         }
+
+        // Server
+        Config serverConfig = config.getConfig("server");
+        this.serverHost = serverConfig.getString("host");
+        this.serverPort = serverConfig.getInt("port");
+        this.serverSsl = serverConfig.getBoolean("ssl");
+        this.serverPassword = serverConfig.getString("password");
+        this.channels = serverConfig.getStringList("channels");
     }
 }

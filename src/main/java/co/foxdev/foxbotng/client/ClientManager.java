@@ -53,12 +53,15 @@ public class ClientManager {
      * @return a connected Client
      */
     public Client buildClientFromConfig(ClientConfig config) {
-        bot.getLogger().info("Creating client for " + config.getHost());
+        bot.getLogger().info("Creating client for " + config.getServerHost());
 
-        Client client = Client.builder().nick(config.getNick()).user(config.getIdent()).realName(config.getRealname())
-                .serverHost(config.getHost())
-                .serverPort(config.getPort())
-                .secure(config.isSsl()).build();
+        Client client = Client.builder().nick(config.getBotNick())
+                .user(config.getBotIdent())
+                .realName(config.getBotRealname())
+                .serverHost(config.getServerHost())
+                .serverPort(config.getServerPort())
+                .secure(config.isServerSsl())
+                .serverPassword(config.getServerPassword()).build();
 
         clientConfigs.put(client, config);
         client.getEventManager().registerEventListener(new MessageListener(bot));
