@@ -20,6 +20,7 @@ package co.foxdev.foxbotng;
 import co.foxdev.foxbotng.client.ClientManager;
 import co.foxdev.foxbotng.config.ClientConfig;
 import co.foxdev.foxbotng.config.ConfigManager;
+import co.foxdev.foxbotng.database.DatabaseManager;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import lombok.Getter;
@@ -42,8 +43,14 @@ public class FoxBotNG {
     private ConfigManager configManager;
     @Getter
     private ClientManager clientManager;
+    @Getter
+    private DatabaseManager databaseManager;
+    @Getter
+    private static FoxBotNG instance;
 
     public FoxBotNG(String[] args) {
+        instance = this;
+
         OptionParser parser = new OptionParser() {
             {
                 acceptsAll(asList("h", "help", "?"),
@@ -78,13 +85,13 @@ public class FoxBotNG {
 
         if (options.has("c")) {
             if (options.hasArgument("c")) {
-                configManager = new ConfigManager(this, (File) options.valueOf("c"));
+                configManager = new ConfigManager((File) options.valueOf("c"));
             } else {
                 logger.warn("Please specify a config file.");
                 return;
             }
         } else {
-            configManager = new ConfigManager(this);
+            configManager = new ConfigManager();
         }
 
         // Initialise config and create defaults if needed
@@ -92,16 +99,20 @@ public class FoxBotNG {
             configManager.initConfig();
         } catch (IOException ex) {
             logger.error("Error loading config.", ex);
+            return;
+        }
+
+        databaseManager = new DatabaseManager();
+        try {
+            databaseManager.init();
+        } catch (IOException ex) {
+            logger.error("Error while creating DatabaseManager", ex);
         }
 
         // Actually create and connect the bot(s)
-        clientManager = new ClientManager(this);
+        clientManager = new ClientManager();
         for (ClientConfig clientConfig : configManager.getClientConfigs()) {
-            clientManager.buildClientFromConfig(clientConfig);
+            clientManager.buildClient(clientConfig);
         }
-    }
-
-    private void parseOpts() {
-
     }
 }

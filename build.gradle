@@ -41,6 +41,7 @@ dependencies {
     compile 'org.kitteh.irc:client-lib:0.3.6'
     compile "org.projectlombok:lombok:1.16.6"
     compile "net.sf.jopt-simple:jopt-simple:4.9"
+    compile "org.xerial:sqlite-jdbc:3.7.2"
     testCompile 'junit:junit:4.12'
 }
 

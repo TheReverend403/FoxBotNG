@@ -19,6 +19,7 @@ package co.foxdev.foxbotng.client;
 
 import co.foxdev.foxbotng.FoxBotNG;
 import co.foxdev.foxbotng.config.ClientConfig;
+import co.foxdev.foxbotng.database.ClientDatabase;
 import co.foxdev.foxbotng.listeners.ChannelListener;
 import co.foxdev.foxbotng.listeners.MessageListener;
 import co.foxdev.foxbotng.listeners.ServerListener;
@@ -28,19 +29,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ClientManager {
-    private FoxBotNG bot;
-    private Map<Client, ClientConfig> clientConfigs = new HashMap<>();
-
-    public ClientManager(FoxBotNG bot) {
-        this.bot = bot;
-    }
+    private static final FoxBotNG bot = FoxBotNG.getInstance();
+    private final Map<Client, ClientConfig> clientConfigs = new HashMap<>();
 
     /**
      * Gets a raw ClientConfig object to retrieve Client settings from.
      * @param client The Client to get settings for
      * @return The ClientConfig for the passed Client parameter
      */
-    public ClientConfig getClientConfig(Client client) {
+    public ClientConfig getConfig(Client client) {
         if (clientConfigs.containsKey(client)) {
             return clientConfigs.get(client);
         }
@@ -48,11 +45,20 @@ public class ClientManager {
     }
 
     /**
+     * Gets the ClientDatabase object associated with a Client
+     * @param client Client to get ClientDatabase for
+     * @return ClientDatabase for Client
+     */
+    public ClientDatabase getDatabase(Client client) {
+        return bot.getDatabaseManager().getDatabaseForClient(client);
+    }
+
+    /**
      * Builds a KittehIRCClientLib client and connects it.
      * @param config ClientConfig this client gets its settings from
      * @return a connected Client
      */
-    public Client buildClientFromConfig(ClientConfig config) {
+    public Client buildClient(ClientConfig config) {
         bot.getLogger().info("Creating client for " + config.getServerHost());
 
         Client client = Client.builder().nick(config.getBotNick())
@@ -63,10 +69,12 @@ public class ClientManager {
                 .secure(config.isServerSsl())
                 .serverPassword(config.getServerPassword()).build();
 
+        ClientDatabase database = bot.getDatabaseManager().getDatabaseForClient(client);
+
         clientConfigs.put(client, config);
-        client.getEventManager().registerEventListener(new MessageListener(bot));
-        client.getEventManager().registerEventListener(new ChannelListener(bot));
-        client.getEventManager().registerEventListener(new ServerListener(bot));
+        client.getEventManager().registerEventListener(new MessageListener());
+        client.getEventManager().registerEventListener(new ChannelListener());
+        client.getEventManager().registerEventListener(new ServerListener());
 
         config.getChannels().forEach(client::addChannel);
         return client;

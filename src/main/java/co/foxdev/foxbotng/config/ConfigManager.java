@@ -22,26 +22,28 @@ import co.foxdev.foxbotng.Main;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import lombok.Getter;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.util.HashSet;
 import java.util.Set;
 
 public class ConfigManager {
-    private FoxBotNG bot;
+    private final Logger logger;
     private static final String CONFIG_BOTS_KEY = "bots";
 
     @Getter
     private Set<ClientConfig> clientConfigs = new HashSet<>();
+    @Getter
+    private File configDir;
     private File configPath;
 
-    public ConfigManager(FoxBotNG bot) {
-        this.bot = bot;
-        configPath = null;
+    public ConfigManager() {
+        this.logger = FoxBotNG.getInstance().getLogger();
     }
 
-    public ConfigManager(FoxBotNG bot, File configPath) {
-        this.bot = bot;
+    public ConfigManager(File configPath) {
+        this.logger = FoxBotNG.getInstance().getLogger();
         this.configPath = configPath;
     }
 
@@ -54,8 +56,8 @@ public class ConfigManager {
 
         File configFile = getConfigPath();
         if (!configFile.exists()) {
-            bot.getLogger().info("Config not found, saving a default config to " + configFile.getAbsolutePath());
-            bot.getLogger().info("Please configure your bot before running it");
+            logger.info("Config not found, saving a default config to " + configFile.getAbsolutePath());
+            logger.info("Please configure your bot before running it");
 
             InputStream stream = Main.class.getResourceAsStream(jarResource);
             OutputStream resStreamOut;
@@ -75,29 +77,28 @@ public class ConfigManager {
 
         System.setProperty("config.file", configFile.getAbsolutePath());
         Config conf = ConfigFactory.load();
-        bot.getLogger().info("Loading config");
+        logger.info("Loading config");
         Config servers = conf.getConfig(CONFIG_BOTS_KEY);
         for (String server : servers.root().keySet()) {
-            ClientConfig clientConfig = new ClientConfig(servers.getConfig(server));
+            ClientConfig clientConfig = new ClientConfig(server, servers.getConfig(server));
             clientConfigs.add(clientConfig);
-            bot.getLogger().debug(String.format("Config for bot '%s': %s", server, servers.getConfig(server)));
+            logger.debug(String.format("Config for bot '%s': %s", server, servers.getConfig(server)));
         }
     }
 
     private File getConfigPath() throws IOException {
         if (configPath != null) {
             if (!configPath.exists()) {
-                bot.getLogger().warn("Specified config file not found, falling back to default.");
+                logger.warn("Specified config file not found, falling back to default.");
             } else {
                 return configPath;
             }
         }
 
         String configHome;
-        File configDir;
         if ((configHome = System.getenv("XDG_CONFIG_HOME")) == null) {
             configHome = System.getProperty("user.home") + "/.config";
-            bot.getLogger().debug("Could not detect config directory from XDG_CONFIG_HOME, using " + configHome);
+            logger.debug("Could not detect config directory from XDG_CONFIG_HOME, using " + configHome);
         }
 
         configDir = new File(configHome, "/foxbot");

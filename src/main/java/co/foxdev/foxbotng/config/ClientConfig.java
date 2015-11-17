@@ -26,30 +26,34 @@ import java.util.Map;
 
 public class ClientConfig {
     @Getter
-    private String botNick;
+    private final String clientName;
     @Getter
-    private String botIdent;
+    private final String botNick;
     @Getter
-    private String botRealname;
+    private final String botIdent;
     @Getter
-    private Map<String, String> botCtcpReplies = new HashMap<>();
+    private final String botRealname;
+    @Getter
+    private final Map<String, String> botCtcpReplies = new HashMap<>();
 
     @Getter
-    private String serverHost;
+    private final String serverHost;
     @Getter
-    private int serverPort;
+    private final int serverPort;
     @Getter
-    private boolean serverSsl;
+    private final boolean serverSsl;
     @Getter
-    private String serverPassword;
+    private final String serverPassword;
     @Getter
-    private List<String> channels;
+    private final List<String> channels;
 
     /**
      * Builds a ClientConfig
      * @param config A TypeSafe Config library Config object to get settings from
      */
-    public ClientConfig(Config config) {
+    public ClientConfig(String clientName, Config config) {
+        this.clientName = clientName;
+
         // Bot
         Config botConfig = config.getConfig("bot");
         this.botNick = botConfig.getString("nick");
