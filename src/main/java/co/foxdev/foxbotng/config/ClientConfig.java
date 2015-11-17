@@ -18,7 +18,6 @@
 package co.foxdev.foxbotng.config;
 
 import com.typesafe.config.Config;
-import com.typesafe.config.ConfigObject;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -55,9 +54,9 @@ public class ClientConfig {
         this.port = config.getInt("port");
         this.ssl = config.getBoolean("ssl");
         this.channels = config.getStringList("channels");
-        ConfigObject ctcpConfig = config.getObject("ctcp-replies");
-        for (String ctcpReply : ctcpConfig.keySet()) {
-            this.ctcpReplies.put(ctcpReply, ctcpConfig.get(ctcpReply).render());
+        Config ctcpConfig = config.getConfig("ctcp-replies");
+        for (String ctcpReply : ctcpConfig.root().keySet()) {
+            this.ctcpReplies.put(ctcpReply, ctcpConfig.getString(ctcpReply));
         }
     }
 }

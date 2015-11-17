@@ -21,7 +21,6 @@ import co.foxdev.foxbotng.FoxBotNG;
 import co.foxdev.foxbotng.Main;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import com.typesafe.config.ConfigObject;
 import lombok.Getter;
 
 import java.io.*;
@@ -77,10 +76,11 @@ public class ConfigManager {
         System.setProperty("config.file", configFile.getAbsolutePath());
         Config conf = ConfigFactory.load();
         bot.getLogger().info("Loading config");
-        ConfigObject servers = conf.getObject(CONFIG_BOTS_KEY);
-        for (String server : servers.keySet()) {
-            ClientConfig clientConfig = new ClientConfig(conf.getConfig(CONFIG_BOTS_KEY + "." + server));
+        Config servers = conf.getConfig(CONFIG_BOTS_KEY);
+        for (String server : servers.root().keySet()) {
+            ClientConfig clientConfig = new ClientConfig(servers.getConfig(server));
             clientConfigs.add(clientConfig);
+            bot.getLogger().debug(String.format("Config for bot '%s': %s", server, servers.getConfig(server)));
         }
     }
 
