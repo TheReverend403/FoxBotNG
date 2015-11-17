@@ -2,7 +2,7 @@ FoxBotNG
 ========
 
 [![Build Status](https://img.shields.io/jenkins/s/https/ci.notoriousdev.com/FoxBotNG.svg?style=flat-square)](https://ci.notoriousdev.com/job/FoxBotNG/)
-[![Tests](https://img.shields.io/jenkins/t/https/ci.notoriousdev.com/FoxBotNG.svg?style=flat-square)](https://ci.notoriousdev.com/job/FoxBotNG/testngreports/)
+[![Tests](https://img.shields.io/jenkins/t/https/ci.notoriousdev.com/FoxBotNG.svg?style=flat-square)](https://ci.notoriousdev.com/job/FoxBotNG/lastSuccessfulBuild/testReport/)
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
 A complete, ground up rewrite of [FoxBot](https://github.com/FoxDev/FoxBot), now with Gradle and unit tests.
