@@ -65,6 +65,8 @@ public class DatabaseManager {
         if (clientDatabases.containsKey(client)) {
             return clientDatabases.get(client);
         }
-        return new ClientDatabase(client);
+        ClientDatabase clientDatabase = new ClientDatabase(client);
+        clientDatabases.put(client, clientDatabase);
+        return clientDatabase;
     }
 }

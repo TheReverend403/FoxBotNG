@@ -102,17 +102,17 @@ public class FoxBotNG {
             return;
         }
 
+        // Actually create and connect the bot(s)
+        clientManager = new ClientManager();
+        for (ClientConfig clientConfig : configManager.getClientConfigs()) {
+            clientManager.buildClient(clientConfig);
+        }
+
         databaseManager = new DatabaseManager();
         try {
             databaseManager.init();
         } catch (IOException ex) {
             logger.error("Error while creating DatabaseManager", ex);
-        }
-
-        // Actually create and connect the bot(s)
-        clientManager = new ClientManager();
-        for (ClientConfig clientConfig : configManager.getClientConfigs()) {
-            clientManager.buildClient(clientConfig);
         }
     }
 }

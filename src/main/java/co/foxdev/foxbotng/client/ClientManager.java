@@ -69,8 +69,6 @@ public class ClientManager {
                 .secure(config.isServerSsl())
                 .serverPassword(config.getServerPassword()).build();
 
-        ClientDatabase database = bot.getDatabaseManager().getDatabaseForClient(client);
-
         clientConfigs.put(client, config);
         client.getEventManager().registerEventListener(new MessageListener());
         client.getEventManager().registerEventListener(new ChannelListener());
