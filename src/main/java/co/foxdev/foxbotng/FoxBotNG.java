@@ -62,7 +62,7 @@ public class FoxBotNG {
                 acceptsAll(asList("v", "verbose"),
                         "Enable debug for more verbose logging.");
                 acceptsAll(asList("c", "config"),
-                        "Specify an alternate config file.").withOptionalArg().ofType(File.class);
+                        "Specify an alternate config file.").withRequiredArg().ofType(File.class);
             }
         };
         OptionSet options = parser.parse(args);
@@ -88,12 +88,8 @@ public class FoxBotNG {
         }
 
         if (options.has("c")) {
-            if (options.hasArgument("c")) {
-                configManager = new ConfigManager((File) options.valueOf("c"));
-            } else {
-                logger.error("Please specify a config file");
-                return;
-            }
+            File configFile = (File) options.valueOf("c");
+            configManager = new ConfigManager(configFile);
         } else {
             configManager = new ConfigManager();
         }

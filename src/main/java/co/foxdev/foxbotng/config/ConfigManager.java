@@ -88,7 +88,8 @@ public class ConfigManager {
     private File getConfigPath() throws IOException {
         if (configPath != null) {
             if (!configPath.exists()) {
-                logger.warn("Specified config file not found, falling back to default.");
+                logger.warn("Specified config file ({}) not found, falling back to default.",
+                        configPath.getAbsolutePath());
             } else {
                 return configPath;
             }
