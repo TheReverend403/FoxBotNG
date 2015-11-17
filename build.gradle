@@ -22,7 +22,7 @@ def getVersionName = { ->
 }
 
 group 'co.foxdev.foxbotng'
-def mainClassName = 'co.foxdev.foxbotng.Main'
+def mainClassName = 'co.foxdev.foxbotng.FoxBotNG'
 version = getVersionName()
 
 repositories {

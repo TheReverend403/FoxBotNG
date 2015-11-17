@@ -18,7 +18,6 @@
 package co.foxdev.foxbotng.config;
 
 import co.foxdev.foxbotng.FoxBotNG;
-import co.foxdev.foxbotng.Main;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import lombok.Getter;
@@ -59,7 +58,7 @@ public class ConfigManager {
             logger.info("Config not found, saving a default config to " + configFile.getAbsolutePath());
             logger.info("Please configure your bot before running it");
 
-            InputStream stream = Main.class.getResourceAsStream(jarResource);
+            InputStream stream = FoxBotNG.class.getResourceAsStream(jarResource);
             OutputStream resStreamOut;
             int readBytes;
             byte[] buffer = new byte[4096];

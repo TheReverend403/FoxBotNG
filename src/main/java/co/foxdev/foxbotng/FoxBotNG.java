@@ -48,6 +48,10 @@ public class FoxBotNG {
     @Getter
     private static FoxBotNG instance;
 
+    public static void main(final String[] args) {
+        new FoxBotNG(args);
+    }
+
     public FoxBotNG(String[] args) {
         instance = this;
 
@@ -72,7 +76,7 @@ public class FoxBotNG {
             return;
         }
 
-        logger.info("Starting FoxBotNG " + Main.class.getPackage().getImplementationVersion());
+        logger.info("Starting FoxBotNG " + FoxBotNG.class.getPackage().getImplementationVersion());
 
         if (options.has("v")) {
             LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
