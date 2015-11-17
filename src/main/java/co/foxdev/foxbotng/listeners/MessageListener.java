@@ -28,7 +28,7 @@ import org.kitteh.irc.client.library.event.user.PrivateMessageEvent;
 import org.kitteh.irc.lib.net.engio.mbassy.listener.Handler;
 
 public class MessageListener {
-    private FoxBotNG bot = null;
+    private FoxBotNG bot;
 
     public MessageListener(FoxBotNG bot) {
         this.bot = bot;
@@ -74,7 +74,7 @@ public class MessageListener {
                 event.getMessage());
         bot.getLogger().info(logMessage);
 
-        ClientConfig clientConfig = bot.getConfigManager().getClientConfig(event.getClient());
+        ClientConfig clientConfig = bot.getClientManager().getClientConfig(event.getClient());
         if (clientConfig.getCtcpReplies().containsKey(event.getMessage().toLowerCase())) {
             event.setReply(clientConfig.getCtcpReplies().get(event.getMessage().toLowerCase()));
         }

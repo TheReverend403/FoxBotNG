@@ -19,6 +19,6 @@ package co.foxdev.foxbotng;
 
 public class Main {
     public static void main(final String[] args) {
-        new FoxBotNG();
+        new FoxBotNG(args);
     }
 }

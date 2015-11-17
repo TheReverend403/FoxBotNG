@@ -22,7 +22,7 @@ import org.kitteh.irc.client.library.event.client.ClientReceiveMOTDEvent;
 import org.kitteh.irc.lib.net.engio.mbassy.listener.Handler;
 
 public class ServerListener {
-    private FoxBotNG bot = null;
+    private FoxBotNG bot;
 
     public ServerListener(FoxBotNG bot) {
         this.bot = bot;

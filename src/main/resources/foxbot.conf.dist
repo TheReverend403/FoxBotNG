@@ -1,4 +1,4 @@
-servers {
+bots {
     foxdev {
         nick: FoxBotNG
         // The bot's ident. Also known as user or login.
@@ -16,5 +16,5 @@ servers {
             time: "Kitty time!"
         }
     }
-    // You can specify more servers by simply copying the syntax above in multiple blocks
+    // You can specify more bots by simply copying the syntax above in multiple blocks
 }

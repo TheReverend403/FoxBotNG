@@ -25,7 +25,7 @@ import org.kitteh.irc.client.library.event.channel.*;
 import org.kitteh.irc.lib.net.engio.mbassy.listener.Handler;
 
 public class ChannelListener {
-    private FoxBotNG bot = null;
+    private FoxBotNG bot;
 
     public ChannelListener(FoxBotNG bot) {
         this.bot = bot;

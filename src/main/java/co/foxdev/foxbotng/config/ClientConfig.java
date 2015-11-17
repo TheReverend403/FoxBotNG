@@ -43,6 +43,10 @@ public class ClientConfig {
     @Getter
     private Map<String, String> ctcpReplies = new HashMap<>();
 
+    /**
+     * Builds a ClientConfig
+     * @param config A TypeSafe Config library Config object to get settings from
+     */
     public ClientConfig(Config config) {
         this.nick = config.getString("nick");
         this.ident = config.getString("ident");

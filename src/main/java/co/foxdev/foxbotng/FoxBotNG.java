@@ -17,28 +17,91 @@
 
 package co.foxdev.foxbotng;
 
+import co.foxdev.foxbotng.client.ClientManager;
+import co.foxdev.foxbotng.config.ClientConfig;
 import co.foxdev.foxbotng.config.ConfigManager;
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
 import lombok.Getter;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 
+import java.io.File;
 import java.io.IOException;
+
+import static java.util.Arrays.asList;
 
 public class FoxBotNG {
     @Getter
     private final Logger logger = LogManager.getLogger(FoxBotNG.class);
     @Getter
-    private ConfigManager configManager = null;
+    private ConfigManager configManager;
+    @Getter
+    private ClientManager clientManager;
 
-    public FoxBotNG() {
-        logger.info("Starting FoxBotNG " + Main.class.getPackage().getImplementationVersion());
-        configManager = new ConfigManager(this);
-        try {
-            if (!configManager.initConfig()) {
-                logger.error("Error loading config!");
+    public FoxBotNG(String[] args) {
+        OptionParser parser = new OptionParser() {
+            {
+                acceptsAll(asList("h", "help", "?"),
+                        "Prints this help screen.").forHelp();
+                acceptsAll(asList("v", "verbose"),
+                        "Enable debug for more verbose logging.");
+                acceptsAll(asList("c", "config"),
+                        "Specify an alternate config file.").withOptionalArg().ofType(File.class);
             }
-        } catch (IOException ex) {
-            logger.error("Error loading config!", ex);
+        };
+        OptionSet options = parser.parse(args);
+
+        if (options.has("h")) {
+            try {
+                parser.printHelpOn(System.out);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
         }
+
+        logger.info("Starting FoxBotNG " + Main.class.getPackage().getImplementationVersion());
+
+        if (options.has("v")) {
+            LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+            Configuration config = ctx.getConfiguration();
+            LoggerConfig loggerConfig = config.getLoggerConfig(logger.getName());
+            loggerConfig.setLevel(Level.DEBUG);
+            ctx.updateLoggers();
+            logger.debug("Log level set to DEBUG");
+        }
+
+        if (options.has("c")) {
+            if (options.hasArgument("c")) {
+                configManager = new ConfigManager(this, (File) options.valueOf("c"));
+            } else {
+                logger.warn("Please specify a config file.");
+                return;
+            }
+        } else {
+            configManager = new ConfigManager(this);
+        }
+
+        // Initialise config and create defaults if needed
+        try {
+            configManager.initConfig();
+        } catch (IOException ex) {
+            logger.error("Error loading config.", ex);
+        }
+
+        // Actually create and connect the bot(s)
+        clientManager = new ClientManager(this);
+        for (ClientConfig clientConfig : configManager.getClientConfigs()) {
+            clientManager.buildClientFromConfig(clientConfig);
+        }
+    }
+
+    private void parseOpts() {
+
     }
 }

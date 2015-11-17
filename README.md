@@ -10,7 +10,7 @@ A complete, ground up rewrite of [FoxBot](https://github.com/FoxDev/FoxBot), now
 # Usage
 
 * Download or compile the bot. Downloads can be found at https://ci.notoriousdev.com/job/FoxBotNG/
-* A default config will be saved in either $XDG_CONFIG_DIR/foxbot/ or ~/.config/foxbot/. Edit this file to configure your bot.
+* A default config will be saved in either $XDG_CONFIG_HOME/foxbot/ or ~/.config/foxbot/. Edit this file to configure your bot.
 * java -jar FoxBotNG.jar
 
 Note: Your jar may be named differently depending on whether you compiled from source or downloaded a binary. Generally, source builds are found in build/libs/.
