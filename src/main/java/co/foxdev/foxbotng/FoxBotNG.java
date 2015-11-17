@@ -76,7 +76,7 @@ public class FoxBotNG {
             return;
         }
 
-        logger.info("Starting FoxBotNG " + FoxBotNG.class.getPackage().getImplementationVersion());
+        logger.info("Starting FoxBotNG {}", FoxBotNG.class.getPackage().getImplementationVersion());
 
         if (options.has("v")) {
             LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
@@ -91,7 +91,7 @@ public class FoxBotNG {
             if (options.hasArgument("c")) {
                 configManager = new ConfigManager((File) options.valueOf("c"));
             } else {
-                logger.warn("Please specify a config file.");
+                logger.error("Please specify a config file");
                 return;
             }
         } else {
@@ -102,7 +102,7 @@ public class FoxBotNG {
         try {
             configManager.initConfig();
         } catch (IOException ex) {
-            logger.error("Error loading config.", ex);
+            logger.error("Error while loading config", ex);
             return;
         }
 

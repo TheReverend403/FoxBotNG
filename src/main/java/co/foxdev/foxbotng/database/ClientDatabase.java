@@ -42,7 +42,7 @@ public class ClientDatabase {
 
     private void createIfNotExists(Client client) throws SQLException, IOException {
         String clientName = bot.getClientManager().getConfig(client).getClientName();
-        bot.getLogger().info("Creating database for " + clientName);
+        bot.getLogger().info("Creating database for {}", clientName);
         Connection conn = getConnection();
         if (conn != null) {
             Statement stmt = conn.createStatement();

@@ -81,7 +81,7 @@ public class ConfigManager {
         for (String server : servers.root().keySet()) {
             ClientConfig clientConfig = new ClientConfig(server, servers.getConfig(server));
             clientConfigs.add(clientConfig);
-            logger.debug(String.format("Config for bot '%s': %s", server, servers.getConfig(server)));
+            logger.debug("Config for bot '{}': {}", server, servers.getConfig(server));
         }
     }
 
