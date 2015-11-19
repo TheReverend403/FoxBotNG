@@ -38,7 +38,7 @@ public class ConfigManager {
     private File configPath;
 
     public ConfigManager() {
-        this.logger = FoxBotNG.getInstance().getLogger();
+        this(null);
     }
 
     public ConfigManager(File configPath) {
