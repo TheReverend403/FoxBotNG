@@ -98,7 +98,7 @@ public class ConfigManager {
         String configHome;
         if ((configHome = System.getenv("XDG_CONFIG_HOME")) == null) {
             configHome = System.getProperty("user.home") + "/.config";
-            logger.debug("Could not detect config directory from XDG_CONFIG_HOME, using " + configHome);
+            logger.debug("Could not detect config directory from XDG_CONFIG_HOME, using {}", configHome);
         }
 
         configDir = new File(configHome, "/foxbot");
