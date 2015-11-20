@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application'
     id 'com.github.johnrengelman.shadow' version '1.2.2'
 }
 
@@ -22,7 +23,7 @@ def getVersionName = { ->
 }
 
 group 'co.foxdev.foxbotng'
-def mainClassName = 'co.foxdev.foxbotng.FoxBotNG'
+mainClassName = group + '.' + rootProject.name
 version = getVersionName()
 
 repositories {
@@ -34,15 +35,15 @@ repositories {
 }
 
 dependencies {
-    compile 'org.apache.logging.log4j:log4j-api:2.4.1'
-    compile 'org.apache.logging.log4j:log4j-core:2.4.1'
-    compile 'com.typesafe:config:1.3.0'
-    compile 'org.jsoup:jsoup:1.8.3'
-    compile 'org.kitteh.irc:client-lib:0.3.6'
-    compile "org.projectlombok:lombok:1.16.6"
-    compile "net.sf.jopt-simple:jopt-simple:4.9"
-    compile "org.xerial:sqlite-jdbc:3.7.2"
-    testCompile 'junit:junit:4.12'
+    compile 'ch.qos.logback:logback-core:1.1.+'
+    compile 'ch.qos.logback:logback-classic:1.1.+'
+    compile 'com.typesafe:config:1.3.+'
+    compile 'org.jsoup:jsoup:1.8.+'
+    compile 'org.kitteh.irc:client-lib:0.3.+'
+    compile "org.projectlombok:lombok:1.16.+"
+    compile "net.sf.jopt-simple:jopt-simple:4.+"
+    compile "org.xerial:sqlite-jdbc:3.7.+"
+    testCompile 'junit:junit:4.+'
 }
 
 jar {
@@ -50,8 +51,7 @@ jar {
     targetCompatibility = 1.8
 
     manifest {
-        attributes 'Main-Class': mainClassName,
-                'Implementation-Title': 'Gradle',
+        attributes 'Implementation-Title': mainClassName,
                 'Implementation-Version': version,
                 'Built-Date': new Date(),
                 'Built-By': System.getProperty('user.name'),

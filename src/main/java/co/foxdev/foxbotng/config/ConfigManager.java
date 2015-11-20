@@ -21,7 +21,7 @@ import co.foxdev.foxbotng.FoxBotNG;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import lombok.Getter;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import java.io.*;
 import java.util.HashSet;

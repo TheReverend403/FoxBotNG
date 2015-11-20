@@ -24,12 +24,8 @@ import co.foxdev.foxbotng.database.DatabaseManager;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import lombok.Getter;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.config.Configuration;
-import org.apache.logging.log4j.core.config.LoggerConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,8 +33,9 @@ import java.io.IOException;
 import static java.util.Arrays.asList;
 
 public class FoxBotNG {
+    private final String className = getClass().getSimpleName();
     @Getter
-    private final Logger logger = LogManager.getLogger(FoxBotNG.class);
+    private Logger logger = LoggerFactory.getLogger(className);
     @Getter
     private ConfigManager configManager;
     @Getter
@@ -76,14 +73,10 @@ public class FoxBotNG {
             return;
         }
 
-        logger.info("Starting FoxBotNG {}", FoxBotNG.class.getPackage().getImplementationVersion());
+        logger.info("Starting {} {}", className, getClass().getPackage().getImplementationVersion());
 
         if (options.has("v")) {
-            LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-            Configuration config = ctx.getConfiguration();
-            LoggerConfig loggerConfig = config.getLoggerConfig(logger.getName());
-            loggerConfig.setLevel(Level.DEBUG);
-            ctx.updateLoggers();
+            logger = LoggerFactory.getLogger(className + ".DEBUG");
             logger.debug("Log level set to DEBUG");
         }
 
