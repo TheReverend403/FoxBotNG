@@ -95,14 +95,14 @@ public class ConfigManager {
             }
         }
 
-        String configHome;
-        if ((configHome = System.getenv("XDG_CONFIG_HOME")) == null) {
-            configHome = System.getProperty("user.home") + "/.config";
+        File configHome;
+        if (!(configHome = new File(System.getenv("XDG_CONFIG_HOME"))).exists()) {
+            configHome = new File(System.getProperty("user.home"), ".config");
             logger.debug("Could not detect config directory from XDG_CONFIG_HOME, using {}", configHome);
         }
 
-        configDir = new File(configHome, "/foxbot");
-        configPath = new File(configDir, "/foxbot.conf");
+        configDir = new File(configHome, "foxbot");
+        configPath = new File(configDir, "foxbot.conf");
         if (!configDir.exists() && !configDir.mkdir()) {
             throw new IOException("Could not create config directory.");
         }
