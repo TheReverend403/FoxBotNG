@@ -18,7 +18,6 @@
 package co.foxdev.foxbotng.database;
 
 import co.foxdev.foxbotng.FoxBotNG;
-import lombok.Getter;
 import org.kitteh.irc.client.library.Client;
 
 import java.io.File;
@@ -28,9 +27,7 @@ import java.util.Map;
 
 public class DatabaseManager {
     private static final FoxBotNG bot = FoxBotNG.getInstance();
-    @Getter
     private File dataDir;
-    @Getter
     private final Map<Client, ClientDatabase> clientDatabases = new HashMap<>();
 
     public DatabaseManager() {
@@ -68,5 +65,13 @@ public class DatabaseManager {
         ClientDatabase clientDatabase = new ClientDatabase(client);
         clientDatabases.put(client, clientDatabase);
         return clientDatabase;
+    }
+
+    public File getDataDir() {
+        return this.dataDir;
+    }
+
+    public Map<Client, ClientDatabase> getClientDatabases() {
+        return this.clientDatabases;
     }
 }

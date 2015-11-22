@@ -23,7 +23,6 @@ import co.foxdev.foxbotng.config.ConfigManager;
 import co.foxdev.foxbotng.database.DatabaseManager;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,15 +33,10 @@ import static java.util.Arrays.asList;
 
 public class FoxBotNG {
     private final String className = getClass().getSimpleName();
-    @Getter
     private Logger logger = LoggerFactory.getLogger(className);
-    @Getter
     private ConfigManager configManager;
-    @Getter
     private ClientManager clientManager;
-    @Getter
     private DatabaseManager databaseManager;
-    @Getter
     private static FoxBotNG instance;
 
     public static void main(final String[] args) {
@@ -107,5 +101,25 @@ public class FoxBotNG {
         } catch (IOException ex) {
             logger.error("Error while creating DatabaseManager", ex);
         }
+    }
+
+    public static FoxBotNG getInstance() {
+        return FoxBotNG.instance;
+    }
+
+    public Logger getLogger() {
+        return this.logger;
+    }
+
+    public ConfigManager getConfigManager() {
+        return this.configManager;
+    }
+
+    public ClientManager getClientManager() {
+        return this.clientManager;
+    }
+
+    public DatabaseManager getDatabaseManager() {
+        return this.databaseManager;
     }
 }

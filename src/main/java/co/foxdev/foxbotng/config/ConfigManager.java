@@ -20,7 +20,6 @@ package co.foxdev.foxbotng.config;
 import co.foxdev.foxbotng.FoxBotNG;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import lombok.Getter;
 import org.slf4j.Logger;
 
 import java.io.*;
@@ -30,10 +29,7 @@ import java.util.Set;
 public class ConfigManager {
     private final Logger logger;
     private static final String CONFIG_BOTS_KEY = "bots";
-
-    @Getter
     private Set<ClientConfig> clientConfigs = new HashSet<>();
-    @Getter
     private File configDir;
     private File configPath;
 
@@ -107,5 +103,13 @@ public class ConfigManager {
             throw new IOException("Could not create config directory.");
         }
         return configPath;
+    }
+
+    public Set<ClientConfig> getClientConfigs() {
+        return this.clientConfigs;
+    }
+
+    public File getConfigDir() {
+        return this.configDir;
     }
 }

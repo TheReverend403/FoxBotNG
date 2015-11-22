@@ -18,33 +18,22 @@
 package co.foxdev.foxbotng.config;
 
 import com.typesafe.config.Config;
-import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ClientConfig {
-    @Getter
     private final String clientName;
-    @Getter
     private final String botNick;
-    @Getter
     private final String botIdent;
-    @Getter
     private final String botRealname;
-    @Getter
     private final Map<String, String> botCtcpReplies = new HashMap<>();
 
-    @Getter
     private final String serverHost;
-    @Getter
     private final int serverPort;
-    @Getter
     private final boolean serverSsl;
-    @Getter
     private final String serverPassword;
-    @Getter
     private final List<String> channels;
 
     /**
@@ -72,5 +61,45 @@ public class ClientConfig {
         this.serverSsl = serverConfig.getBoolean("ssl");
         this.serverPassword = serverConfig.getString("password");
         this.channels = serverConfig.getStringList("channels");
+    }
+
+    public String getClientName() {
+        return this.clientName;
+    }
+
+    public String getBotNick() {
+        return this.botNick;
+    }
+
+    public String getBotIdent() {
+        return this.botIdent;
+    }
+
+    public String getBotRealname() {
+        return this.botRealname;
+    }
+
+    public Map<String, String> getBotCtcpReplies() {
+        return this.botCtcpReplies;
+    }
+
+    public String getServerHost() {
+        return this.serverHost;
+    }
+
+    public int getServerPort() {
+        return this.serverPort;
+    }
+
+    public boolean isServerSsl() {
+        return this.serverSsl;
+    }
+
+    public String getServerPassword() {
+        return this.serverPassword;
+    }
+
+    public List<String> getChannels() {
+        return this.channels;
     }
 }
