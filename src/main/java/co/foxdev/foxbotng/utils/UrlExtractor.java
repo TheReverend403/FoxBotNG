@@ -17,6 +17,7 @@
 
 package co.foxdev.foxbotng.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 public class UrlExtractor {
     private static final Pattern URL_PATTERN = Pattern.compile(
             ".*((https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]).*");
@@ -35,8 +37,11 @@ public class UrlExtractor {
 
     public static String getFrom(String message) {
         Matcher matcher = URL_PATTERN.matcher(message);
-        if (matcher.matches())
-            return matcher.group(1);
+        if (matcher.matches()) {
+            String url = matcher.group(1);
+            log.debug("Found URL '{}' in '{}'", url, message);
+            return url;
+        }
         return null;
     }
 
@@ -48,8 +53,9 @@ public class UrlExtractor {
                 title = "No title";
             }
             return title.substring(0, title.length() >= 100 ? 100 : title.length());
-        } catch (IOException e) {
-            return e.getLocalizedMessage();
+        } catch (IOException ex) {
+            log.warn("Error parsing title from {}: {}", url, ex.getLocalizedMessage());
+            return ex.getLocalizedMessage();
         }
     }
 }

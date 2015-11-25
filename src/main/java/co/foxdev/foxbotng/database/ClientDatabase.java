@@ -18,6 +18,7 @@
 package co.foxdev.foxbotng.database;
 
 import co.foxdev.foxbotng.FoxBotNG;
+import lombok.extern.slf4j.Slf4j;
 import org.kitteh.irc.client.library.Client;
 
 import java.io.File;
@@ -27,6 +28,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+@Slf4j
 public class ClientDatabase {
     private static final FoxBotNG bot = FoxBotNG.getInstance();
     private final Client client;
@@ -42,7 +44,7 @@ public class ClientDatabase {
 
     private void createIfNotExists(Client client) throws SQLException, IOException {
         String clientName = bot.getClientManager().getConfig(client).getClientName();
-        bot.getLogger().info("Creating database for {}", clientName);
+        log.info("Creating database for {}", clientName);
         Connection conn = getConnection();
         if (conn != null) {
             Statement stmt = conn.createStatement();
@@ -62,7 +64,7 @@ public class ClientDatabase {
         try {
             conn = DriverManager.getConnection(getJDBCUrl());
         } catch (SQLException ex) {
-            bot.getLogger().error("Error while getting DB connection for " +
+            log.error("Error while getting DB connection for " +
                     bot.getClientManager().getConfig(client).getClientName(), ex);
             return null;
         }

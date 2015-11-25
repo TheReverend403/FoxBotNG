@@ -17,13 +17,16 @@
 
 package co.foxdev.foxbotng;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import co.foxdev.foxbotng.client.ClientManager;
 import co.foxdev.foxbotng.config.ClientConfig;
 import co.foxdev.foxbotng.config.ConfigManager;
 import co.foxdev.foxbotng.database.DatabaseManager;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
-import org.slf4j.Logger;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
@@ -31,12 +34,15 @@ import java.io.IOException;
 
 import static java.util.Arrays.asList;
 
+@Slf4j
 public class FoxBotNG {
-    private final String className = getClass().getSimpleName();
-    private Logger logger = LoggerFactory.getLogger(className);
+    @Getter
     private ConfigManager configManager;
+    @Getter
     private ClientManager clientManager;
+    @Getter
     private DatabaseManager databaseManager;
+    @Getter
     private static FoxBotNG instance;
 
     public static void main(final String[] args) {
@@ -67,11 +73,12 @@ public class FoxBotNG {
             return;
         }
 
-        logger.info("Starting {} {}", className, getClass().getPackage().getImplementationVersion());
+        log.info("Starting {} {}", "FoxBotNG", getClass().getPackage().getImplementationVersion());
 
         if (options.has("v")) {
-            logger = LoggerFactory.getLogger(className + ".DEBUG");
-            logger.debug("Log level set to DEBUG");
+            Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+            root.setLevel(Level.DEBUG);
+            log.debug("Log level set to DEBUG");
         }
 
         if (options.has("c")) {
@@ -85,7 +92,7 @@ public class FoxBotNG {
         try {
             configManager.initConfig();
         } catch (IOException ex) {
-            logger.error("Error while loading config", ex);
+            log.error("Error while loading config", ex);
             return;
         }
 
@@ -99,27 +106,7 @@ public class FoxBotNG {
         try {
             databaseManager.init();
         } catch (IOException ex) {
-            logger.error("Error while creating DatabaseManager", ex);
+            log.error("Error while creating DatabaseManager", ex);
         }
-    }
-
-    public static FoxBotNG getInstance() {
-        return FoxBotNG.instance;
-    }
-
-    public Logger getLogger() {
-        return this.logger;
-    }
-
-    public ConfigManager getConfigManager() {
-        return this.configManager;
-    }
-
-    public ClientManager getClientManager() {
-        return this.clientManager;
-    }
-
-    public DatabaseManager getDatabaseManager() {
-        return this.databaseManager;
     }
 }

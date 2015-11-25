@@ -18,6 +18,8 @@
 package co.foxdev.foxbotng.database;
 
 import co.foxdev.foxbotng.FoxBotNG;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.kitteh.irc.client.library.Client;
 
 import java.io.File;
@@ -25,16 +27,19 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 public class DatabaseManager {
     private static final FoxBotNG bot = FoxBotNG.getInstance();
+    @Getter
     private File dataDir;
+    @Getter
     private final Map<Client, ClientDatabase> clientDatabases = new HashMap<>();
 
     public DatabaseManager() {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException ex) {
-            bot.getLogger().error("Error while loading SQLite", ex);
+            log.error("Error while loading SQLite", ex);
         }
     }
 
@@ -43,6 +48,7 @@ public class DatabaseManager {
      * @throws IOException
      */
     public void init() throws IOException {
+        log.debug("Initialising DatabaseManager");
         if (dataDir == null) {
             dataDir = new File(bot.getConfigManager().getConfigDir().getAbsolutePath(), "data");
         }
@@ -51,6 +57,7 @@ public class DatabaseManager {
                 throw new IOException("Couldn't create data directory");
             }
         }
+        log.debug("Initialised DatabaseManager");
     }
 
     /**
@@ -65,13 +72,5 @@ public class DatabaseManager {
         ClientDatabase clientDatabase = new ClientDatabase(client);
         clientDatabases.put(client, clientDatabase);
         return clientDatabase;
-    }
-
-    public File getDataDir() {
-        return this.dataDir;
-    }
-
-    public Map<Client, ClientDatabase> getClientDatabases() {
-        return this.clientDatabases;
     }
 }

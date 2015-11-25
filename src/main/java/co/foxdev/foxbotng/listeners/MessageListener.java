@@ -21,10 +21,8 @@ import co.foxdev.foxbotng.FoxBotNG;
 import co.foxdev.foxbotng.config.ClientConfig;
 import co.foxdev.foxbotng.utils.UrlExtractor;
 import org.kitteh.irc.client.library.element.Channel;
-import org.kitteh.irc.client.library.element.User;
 import org.kitteh.irc.client.library.event.channel.ChannelMessageEvent;
 import org.kitteh.irc.client.library.event.user.PrivateCTCPQueryEvent;
-import org.kitteh.irc.client.library.event.user.PrivateMessageEvent;
 import org.kitteh.irc.lib.net.engio.mbassy.listener.Handler;
 
 public class MessageListener {
@@ -33,14 +31,6 @@ public class MessageListener {
     @Handler
     public void onChannelMessage(ChannelMessageEvent event) {
         Channel channel = event.getChannel();
-        User actor = event.getActor();
-
-        String logMessage = String.format("[%s] %s: <%s> %s",
-                event.getClient().getServerInfo().getAddress().orElse("unknown"),
-                channel.getName(),
-                actor.getNick(),
-                event.getMessage());
-        bot.getLogger().info(logMessage);
 
         String url;
         if ((url = UrlExtractor.getFrom(event.getMessage())) != null) {
@@ -50,26 +40,7 @@ public class MessageListener {
     }
 
     @Handler
-    public void onPrivateMessage(PrivateMessageEvent event) {
-        User actor = event.getActor();
-
-        String logMessage = String.format("[%s] <%s> %s",
-                event.getClient().getServerInfo().getAddress().orElse("unknown"),
-                actor.getNick(),
-                event.getMessage());
-        bot.getLogger().info(logMessage);
-    }
-
-    @Handler
     public void onCtcp(PrivateCTCPQueryEvent event) {
-        User actor = event.getActor();
-
-        String logMessage = String.format("[%s] <%s> CTCP %s",
-                event.getClient().getServerInfo().getAddress().orElse("unknown"),
-                actor.getNick(),
-                event.getMessage());
-        bot.getLogger().info(logMessage);
-
         ClientConfig clientConfig = bot.getClientManager().getConfig(event.getClient());
         if (clientConfig.getBotCtcpReplies().containsKey(event.getMessage().toLowerCase())) {
             event.setReply(clientConfig.getBotCtcpReplies().get(event.getMessage().toLowerCase()));

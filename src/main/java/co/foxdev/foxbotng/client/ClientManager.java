@@ -20,14 +20,15 @@ package co.foxdev.foxbotng.client;
 import co.foxdev.foxbotng.FoxBotNG;
 import co.foxdev.foxbotng.config.ClientConfig;
 import co.foxdev.foxbotng.database.ClientDatabase;
-import co.foxdev.foxbotng.listeners.ChannelListener;
 import co.foxdev.foxbotng.listeners.MessageListener;
 import co.foxdev.foxbotng.listeners.ServerListener;
+import lombok.extern.slf4j.Slf4j;
 import org.kitteh.irc.client.library.Client;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 public class ClientManager {
     private static final FoxBotNG bot = FoxBotNG.getInstance();
     private final Map<Client, ClientConfig> clientConfigs = new HashMap<>();
@@ -59,7 +60,7 @@ public class ClientManager {
      * @return a connected Client
      */
     public Client buildClient(ClientConfig config) {
-        bot.getLogger().info("Creating client for {}", config.getServerHost());
+        log.info("Creating client for {}", config.getServerHost());
 
         Client client = Client.builder().nick(config.getBotNick())
                 .user(config.getBotIdent())
@@ -71,7 +72,6 @@ public class ClientManager {
 
         clientConfigs.put(client, config);
         client.getEventManager().registerEventListener(new MessageListener());
-        client.getEventManager().registerEventListener(new ChannelListener());
         client.getEventManager().registerEventListener(new ServerListener());
 
         config.getChannels().forEach(client::addChannel);

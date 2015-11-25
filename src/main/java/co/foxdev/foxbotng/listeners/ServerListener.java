@@ -17,19 +17,20 @@
 
 package co.foxdev.foxbotng.listeners;
 
-import co.foxdev.foxbotng.FoxBotNG;
-import org.kitteh.irc.client.library.event.client.ClientReceiveMOTDEvent;
+import lombok.extern.slf4j.Slf4j;
+import org.kitteh.irc.client.library.element.ServerMessage;
+import org.kitteh.irc.client.library.event.helper.ServerMessageEvent;
 import org.kitteh.irc.lib.net.engio.mbassy.listener.Handler;
 
+@Slf4j
 public class ServerListener {
-    private static final FoxBotNG bot = FoxBotNG.getInstance();
-
+    /*
+     * Logs every damn thing.
+     */
     @Handler
-    public void onServerMotd(ClientReceiveMOTDEvent event) {
-        if (event.getMOTD().isPresent()) {
-            for (String motdLine : event.getMOTD().get()) {
-                bot.getLogger().info(motdLine);
-            }
+    public void onRawLine(ServerMessageEvent event) {
+        for (ServerMessage message : event.getOriginalMessages()) {
+            log.info(message.getMessage());
         }
     }
 }
