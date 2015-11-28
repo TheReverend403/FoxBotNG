@@ -53,7 +53,7 @@ public class ConfigManager {
 
         File configFile = getConfigPath();
         if (!configFile.exists()) {
-            log.info("Config not found, saving a default config to " + configFile.getAbsolutePath());
+            log.info("Config not found, saving a default config to {}", configFile.getAbsolutePath());
             log.info("Please configure your bot before running it");
 
             InputStream stream = FoxBotNG.class.getResourceAsStream(jarResource);
