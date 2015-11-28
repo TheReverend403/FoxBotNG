@@ -45,6 +45,11 @@ public class FoxBotNG {
     @Getter
     private static FoxBotNG instance;
 
+    // Constants for short versions of jopt args
+    private static final String ARG_SHORT_HELP = "h";
+    private static final String ARG_SHORT_VERBOSE = "v";
+    private static final String ARG_SHORT_CONFIG = "c";
+
     public static void main(final String[] args) {
         new FoxBotNG(args);
     }
@@ -54,17 +59,17 @@ public class FoxBotNG {
 
         OptionParser parser = new OptionParser() {
             {
-                acceptsAll(asList("h", "help", "?"),
+                acceptsAll(asList(ARG_SHORT_HELP, "help", "?"),
                         "Prints this help screen.").forHelp();
-                acceptsAll(asList("v", "verbose"),
+                acceptsAll(asList(ARG_SHORT_VERBOSE, "verbose"),
                         "Enable debug for more verbose logging.");
-                acceptsAll(asList("c", "config"),
+                acceptsAll(asList(ARG_SHORT_CONFIG, "config"),
                         "Specify an alternate config file.").withRequiredArg().ofType(File.class);
             }
         };
         OptionSet options = parser.parse(args);
 
-        if (options.has("h")) {
+        if (options.has(ARG_SHORT_HELP)) {
             try {
                 parser.printHelpOn(System.out);
             } catch (IOException e) {
@@ -75,13 +80,13 @@ public class FoxBotNG {
 
         log.info("Starting {} {}", "FoxBotNG", getClass().getPackage().getImplementationVersion());
 
-        if (options.has("v")) {
+        if (options.has(ARG_SHORT_VERBOSE)) {
             Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
             root.setLevel(Level.DEBUG);
             log.debug("Log level set to DEBUG");
         }
 
-        if (options.has("c")) {
+        if (options.has(ARG_SHORT_CONFIG)) {
             File configFile = (File) options.valueOf("c");
             configManager = new ConfigManager(configFile);
         } else {
@@ -96,17 +101,18 @@ public class FoxBotNG {
             return;
         }
 
-        // Actually create and connect the bot(s)
-        clientManager = new ClientManager();
-        for (ClientConfig clientConfig : configManager.getClientConfigs()) {
-            clientManager.buildClient(clientConfig);
-        }
-
         databaseManager = new DatabaseManager();
         try {
             databaseManager.init();
         } catch (IOException ex) {
-            log.error("Error while creating DatabaseManager", ex);
+            log.error("Error while loading DatabaseManager", ex);
+            return;
+        }
+
+        // Actually create and connect the bot(s)
+        clientManager = new ClientManager();
+        for (ClientConfig clientConfig : configManager.getClientConfigs()) {
+            clientManager.buildClient(clientConfig);
         }
     }
 }

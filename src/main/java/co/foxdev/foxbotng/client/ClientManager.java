@@ -17,9 +17,7 @@
 
 package co.foxdev.foxbotng.client;
 
-import co.foxdev.foxbotng.FoxBotNG;
 import co.foxdev.foxbotng.config.ClientConfig;
-import co.foxdev.foxbotng.database.ClientDatabase;
 import co.foxdev.foxbotng.listeners.MessageListener;
 import co.foxdev.foxbotng.listeners.ServerListener;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +28,6 @@ import java.util.Map;
 
 @Slf4j
 public class ClientManager {
-    private static final FoxBotNG bot = FoxBotNG.getInstance();
     private final Map<Client, ClientConfig> clientConfigs = new HashMap<>();
 
     /**
@@ -43,15 +40,6 @@ public class ClientManager {
             return clientConfigs.get(client);
         }
         return null;
-    }
-
-    /**
-     * Gets the ClientDatabase object associated with a Client
-     * @param client Client to get ClientDatabase for
-     * @return ClientDatabase for Client
-     */
-    public ClientDatabase getDatabase(Client client) {
-        return bot.getDatabaseManager().getDatabaseForClient(client);
     }
 
     /**

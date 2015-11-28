@@ -18,6 +18,7 @@
 package co.foxdev.foxbotng.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -27,6 +28,8 @@ import java.util.regex.Pattern;
 
 @Slf4j
 public class UrlExtractor {
+    private static final int URL_MAX_BYTES = 650 * 1024; // about 650kb
+    private static final int URL_TIMEOUT = 5000 ; // milliseconds
     private static final Pattern URL_PATTERN = Pattern.compile(
             ".*((https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]).*");
 
@@ -37,7 +40,7 @@ public class UrlExtractor {
 
     public static String getFrom(String message) {
         Matcher matcher = URL_PATTERN.matcher(message);
-        if (matcher.matches()) {
+        if (matcher.matches() && matcher.groupCount() > 0) {
             String url = matcher.group(1);
             log.debug("Found URL '{}' in '{}'", url, message);
             return url;
@@ -47,7 +50,8 @@ public class UrlExtractor {
 
     public static String parseUrlForTitle(String url) {
         try {
-            Document doc = Jsoup.connect(url).followRedirects(true).maxBodySize(655360).timeout(5000).get();
+            Connection conn = Jsoup.connect(url).followRedirects(true).maxBodySize(URL_MAX_BYTES).timeout(URL_TIMEOUT);
+            Document doc = conn.get();
             String title = doc.title();
             if (title.isEmpty()) {
                 title = "No title";
