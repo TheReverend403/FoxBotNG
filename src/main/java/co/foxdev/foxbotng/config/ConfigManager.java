@@ -94,7 +94,9 @@ public class ConfigManager {
         }
 
         File configHome;
-        if (!(configHome = new File(System.getenv("XDG_CONFIG_HOME"))).exists()) {
+        // Try to get config directory from XDG env variables, then use a fallback.
+        if (System.getenv("XDG_CONFIG_HOME") == null ||
+                !(configHome = new File(System.getenv("XDG_CONFIG_HOME"))).exists()) {
             configHome = new File(System.getProperty("user.home"), ".config");
             log.debug("Could not detect config directory from XDG_CONFIG_HOME, using {}", configHome);
         }
