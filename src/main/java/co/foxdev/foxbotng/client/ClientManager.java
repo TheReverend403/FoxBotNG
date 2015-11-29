@@ -25,6 +25,7 @@ import org.kitteh.irc.client.library.Client;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 public class ClientManager {
@@ -65,4 +66,9 @@ public class ClientManager {
         config.getChannels().forEach(client::addChannel);
         return client;
     }
+
+    public Set<Client> getClients(){
+        return clientConfigs.keySet();
+    }
+
 }
