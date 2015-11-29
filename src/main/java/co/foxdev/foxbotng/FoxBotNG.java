@@ -111,6 +111,7 @@ public class FoxBotNG {
             pluginManager = new PluginManager();
         } catch (Exception ex) {
             log.error("Error while loading PluginManager", ex);
+            return;
         }
 
         // Actually create and connect the bot(s)
