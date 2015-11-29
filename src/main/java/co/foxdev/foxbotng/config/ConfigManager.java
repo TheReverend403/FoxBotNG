@@ -55,21 +55,15 @@ public class ConfigManager {
         if (!configFile.exists()) {
             log.info("Config not found, saving a default config to {}", configFile.getAbsolutePath());
             log.info("Please configure your bot before running it");
-
-            InputStream stream = FoxBotNG.class.getResourceAsStream(jarResource);
-            OutputStream resStreamOut;
-            int readBytes;
-            byte[] buffer = new byte[4096];
-            resStreamOut = new FileOutputStream(configFile);
-
-            while ((readBytes = stream.read(buffer)) > 0) {
-                resStreamOut.write(buffer, 0, readBytes);
+            try (InputStream stream = FoxBotNG.class.getResourceAsStream(jarResource)) {
+                int readBytes;
+                byte[] buffer = new byte[4096];
+                try (OutputStream resStreamOut = new FileOutputStream(configFile)) {
+                    while ((readBytes = stream.read(buffer)) > 0) {
+                        resStreamOut.write(buffer, 0, readBytes);
+                    }
+                }
             }
-
-            stream.close();
-            resStreamOut.close();
-            // The bot hasn't been configured yet, so shut down to give the user a chance to do so.
-            System.exit(0);
         }
 
         System.setProperty("config.file", configFile.getAbsolutePath());

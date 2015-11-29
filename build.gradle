@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'findbugs'
     id 'com.github.johnrengelman.shadow' version '1.2.2'
     id "info.robotbrain.lombok" version "1.1"
 }
@@ -65,4 +66,11 @@ jar {
                 'Build-Host': InetAddress.localHost.canonicalHostName,
                 'Built-JDK': System.getProperty('java.version')
     }
+}
+
+findbugs {
+    ignoreFailures = true
+    toolVersion = '3.0.1'
+    sourceSets = [sourceSets.main]
+    reportsDir = file("$project.buildDir/reports/findbugs")
 }

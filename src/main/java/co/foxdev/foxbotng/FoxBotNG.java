@@ -42,9 +42,9 @@ public class FoxBotNG {
     private static final String ARG_SHORT_VERBOSE = "v";
     private static final String ARG_SHORT_CONFIG = "c";
     @Getter
-    private static FoxBotNG instance;
+    private static volatile FoxBotNG instance;
     @Getter
-    private static PluginManager pluginManager;
+    private PluginManager pluginManager;
     @Getter
     private ConfigManager configManager;
     @Getter
@@ -53,8 +53,6 @@ public class FoxBotNG {
     private DatabaseManager databaseManager;
 
     public FoxBotNG(String[] args) {
-        instance = this;
-
         OptionParser parser = new OptionParser() {
             {
                 acceptsAll(asList(ARG_SHORT_HELP, "help", "?"),
@@ -122,6 +120,6 @@ public class FoxBotNG {
     }
 
     public static void main(final String[] args) {
-        new FoxBotNG(args);
+        instance = new FoxBotNG(args);
     }
 }

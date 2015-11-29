@@ -52,16 +52,19 @@ public class PluginManager {
 
     public HashSet<String> getClasses(File file) {
         HashSet<String> found = new HashSet<>();
-        try {
-            ZipInputStream zip = new ZipInputStream(new FileInputStream(file.getAbsoluteFile()));
-            for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
-                if (!entry.isDirectory() && entry.getName().endsWith(".class")) {
-                    String name = entry.getName().replace('/', '.');
-                    found.add(name.substring(0, name.lastIndexOf(".")));
+        try(FileInputStream inFile = new FileInputStream(file.getAbsoluteFile())) {
+            try (ZipInputStream zip = new ZipInputStream(inFile)) {
+                for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
+                    if (!entry.isDirectory() && entry.getName().endsWith(".class")) {
+                        String name = entry.getName().replace('/', '.');
+                        found.add(name.substring(0, name.lastIndexOf(".")));
+                    }
                 }
+            } catch (IOException ex) {
+                log.error("Error while opening {} as a ZipInputStream", file.getAbsolutePath(), ex);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            log.error("Error while opening {} as a FileInputStream", file.getAbsolutePath(), ex);
         }
         return found;
     }
@@ -74,7 +77,13 @@ public class PluginManager {
         }
 
         HashMap<File, HashSet<String>> jarData = new HashMap<>();
-        for (File file : pluginsDir.listFiles(JAR_FILE_FILTER)) {
+        File[] jarFiles;
+        if ((jarFiles = pluginsDir.listFiles(JAR_FILE_FILTER)) == null) {
+            log.debug("No jar files found in {}", pluginsDir.getAbsolutePath());
+            return;
+        }
+
+        for (File file : jarFiles) {
             log.debug("Scanning jar {} for classes.", file.getName());
             HashSet<String> classes = getClasses(file);
             jarData.put(file, classes);

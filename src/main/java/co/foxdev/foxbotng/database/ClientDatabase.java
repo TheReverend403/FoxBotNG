@@ -45,17 +45,18 @@ public class ClientDatabase {
     private void createIfNotExists(Client client) throws SQLException, IOException {
         String clientName = bot.getClientManager().getConfig(client).getClientName();
         log.info("Creating database for {}", clientName);
-        Connection conn = getConnection();
-        if (conn != null) {
-            Statement stmt = conn.createStatement();
-            stmt.executeUpdate("CREATE TABLE nick_ids (nick_id INTEGER PRIMARY KEY AUTOINCREMENT)");
-            stmt.executeUpdate("CREATE TABLE nicknames (" +
-                    "nick_id INTEGER REFERENCES nick_ids, slug STRING PRIMARY KEY, canonical string)");
-            stmt.executeUpdate("CREATE TABLE nick_values (nick_id INTEGER REFERENCES nick_ids(nick_id), " +
-                    "key STRING, value STRING, PRIMARY KEY (nick_id, key))");
-            stmt.executeUpdate("CREATE TABLE channel_values (" +
-                    "channel STRING, key STRING, value STRING, PRIMARY KEY (channel, key))");
-            conn.close();
+        try (Connection conn = getConnection()) {
+            if (conn != null) {
+                try (Statement stmt = conn.createStatement()) {
+                    stmt.executeUpdate("CREATE TABLE nick_ids (nick_id INTEGER PRIMARY KEY AUTOINCREMENT)");
+                    stmt.executeUpdate("CREATE TABLE nicknames (" +
+                            "nick_id INTEGER REFERENCES nick_ids, slug STRING PRIMARY KEY, canonical string)");
+                    stmt.executeUpdate("CREATE TABLE nick_values (nick_id INTEGER REFERENCES nick_ids(nick_id), " +
+                            "key STRING, value STRING, PRIMARY KEY (nick_id, key))");
+                    stmt.executeUpdate("CREATE TABLE channel_values (" +
+                            "channel STRING, key STRING, value STRING, PRIMARY KEY (channel, key))");
+                }
+            }
         }
     }
 
