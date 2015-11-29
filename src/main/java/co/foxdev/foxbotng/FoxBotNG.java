@@ -19,6 +19,7 @@ package co.foxdev.foxbotng;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
+import co.foxdev.foxbotng.api.PluginManager;
 import co.foxdev.foxbotng.client.ClientManager;
 import co.foxdev.foxbotng.config.ClientConfig;
 import co.foxdev.foxbotng.config.ConfigManager;
@@ -44,6 +45,8 @@ public class FoxBotNG {
     private DatabaseManager databaseManager;
     @Getter
     private static FoxBotNG instance;
+    @Getter
+    private static PluginManager pluginManager;
 
     // Constants for short versions of jopt args
     private static final String ARG_SHORT_HELP = "h";
@@ -109,6 +112,11 @@ public class FoxBotNG {
             return;
         }
 
+        try{
+            pluginManager = new PluginManager();
+        }catch (Exception ex){
+            log.error("Error while loading PluginManager", ex);
+        }
         // Actually create and connect the bot(s)
         clientManager = new ClientManager();
         for (ClientConfig clientConfig : configManager.getClientConfigs()) {

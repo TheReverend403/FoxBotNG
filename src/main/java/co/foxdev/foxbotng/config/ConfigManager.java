@@ -94,8 +94,13 @@ public class ConfigManager {
         }
 
         File configHome;
-        if (!(configHome = new File(System.getenv("XDG_CONFIG_HOME"))).exists()) {
+        if(System.getenv("XDG_CONFIG_HOME") != null){
+            configHome = new File(System.getenv("XDG_CONFIG_HOME"));
+        }else{
             configHome = new File(System.getProperty("user.home"), ".config");
+            if(!configHome.exists()){
+                configHome.mkdirs();
+            }
             log.debug("Could not detect config directory from XDG_CONFIG_HOME, using {}", configHome);
         }
 
