@@ -37,25 +37,20 @@ import static java.util.Arrays.asList;
 
 @Slf4j
 public class FoxBotNG {
+    // Constants for short versions of jopt args
+    private static final String ARG_SHORT_HELP = "h";
+    private static final String ARG_SHORT_VERBOSE = "v";
+    private static final String ARG_SHORT_CONFIG = "c";
+    @Getter
+    private static FoxBotNG instance;
+    @Getter
+    private static PluginManager pluginManager;
     @Getter
     private ConfigManager configManager;
     @Getter
     private ClientManager clientManager;
     @Getter
     private DatabaseManager databaseManager;
-    @Getter
-    private static FoxBotNG instance;
-    @Getter
-    private static PluginManager pluginManager;
-
-    // Constants for short versions of jopt args
-    private static final String ARG_SHORT_HELP = "h";
-    private static final String ARG_SHORT_VERBOSE = "v";
-    private static final String ARG_SHORT_CONFIG = "c";
-
-    public static void main(final String[] args) {
-        new FoxBotNG(args);
-    }
 
     public FoxBotNG(String[] args) {
         instance = this;
@@ -112,10 +107,9 @@ public class FoxBotNG {
             return;
         }
 
-        pluginManager = new PluginManager();
-        try{
-            pluginManager.init();
-        }catch (Exception ex){
+        try {
+            pluginManager = new PluginManager();
+        } catch (Exception ex) {
             log.error("Error while loading PluginManager", ex);
         }
 
@@ -124,5 +118,9 @@ public class FoxBotNG {
         for (ClientConfig clientConfig : configManager.getClientConfigs()) {
             clientManager.buildClient(clientConfig);
         }
+    }
+
+    public static void main(final String[] args) {
+        new FoxBotNG(args);
     }
 }
