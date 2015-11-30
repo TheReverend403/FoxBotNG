@@ -99,8 +99,8 @@ public class PluginManager {
 
             try {
                 loadFile(file);
-            } catch (Exception e) {
-                log.error("Error loading {}", file.getName());
+            } catch (Exception ex) {
+                log.error("Error loading {}", file.getName(), ex);
             }
         }
 
@@ -110,7 +110,7 @@ public class PluginManager {
                 Class c;
                 try {
                     c = this.getClass().getClassLoader().loadClass(className);
-                } catch (ClassNotFoundException e) {
+                } catch (ClassNotFoundException ex) {
                     continue;
                 }
 
@@ -126,8 +126,8 @@ public class PluginManager {
                             Object instance;
                             try {
                                 instance = c.newInstance();
-                            } catch (InstantiationException | IllegalAccessException e) {
-                                log.error("Error instantiating class {}", c.getName(), e);
+                            } catch (InstantiationException | IllegalAccessException ex) {
+                                log.error("Error instantiating class {}", c.getName(), ex);
                                 break;
                             }
                             if (instance instanceof PluginBase) {
