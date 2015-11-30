@@ -34,10 +34,9 @@ public abstract class PluginBase {
             if(plugin == null){
                 throw new IllegalArgumentException("Cannot call getLogger() on non-plugin annotated class.");
             }
-            return LoggerFactory.getLogger(plugin.name());
-        }else {
-            return log;
+            log = LoggerFactory.getLogger(plugin.name());
         }
+        return log;
     }
 
     public FoxBotNG getBot(){

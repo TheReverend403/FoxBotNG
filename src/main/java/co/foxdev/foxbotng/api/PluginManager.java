@@ -123,17 +123,19 @@ public class PluginManager {
                                 log.warn("Duplicate plugin name '{}', not loading.", pl.name());
                                 break;
                             }
+                            Object instance = null;
                             try {
-                                Object instance = c.newInstance();
-                                if (instance instanceof PluginBase) {
-                                    log.info("Loading {} v{} ({})", pl.name(), pl.version(), pl.author());
-                                    PluginBase plugin = (PluginBase) instance;
-                                    plugin.onEnable();
-                                    plugins.put(pl, plugin);
-                                    break;
-                                }
+                                instance = c.newInstance();
                             } catch (InstantiationException | IllegalAccessException e) {
                                 log.error("Error instantiating class " + c.getName(), e);
+                                break;
+                            }
+                            if (instance instanceof PluginBase) {
+                                log.info("Loading {} v{} ({})", pl.name(), pl.version(), pl.author());
+                                PluginBase plugin = (PluginBase) instance;
+                                plugin.onEnable();
+                                plugins.put(pl, plugin);
+                                break;
                             }
                         }
                     }
