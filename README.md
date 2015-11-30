@@ -16,3 +16,7 @@ Requires Java 8.
 * java -jar FoxBotNG.jar
 
 Note: Your jar may be named differently depending on whether you compiled from source or downloaded a binary. Generally, source builds are found in build/libs/.
+
+# Contact
+
+Interested in contributing, want some help or just have some questions? Join us on [irc.foxdev.co in #foxdev](https://webchat.foxdev.co/?channels=foxdev)

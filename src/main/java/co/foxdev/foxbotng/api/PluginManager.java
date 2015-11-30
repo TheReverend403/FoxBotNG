@@ -40,7 +40,7 @@ import java.util.zip.ZipInputStream;
 public class PluginManager {
     private static final FileFilter JAR_FILE_FILTER = pathname -> pathname.getAbsolutePath().endsWith(".jar");
     @Getter
-    private Map<Plugin, Object> plugins = new HashMap<>();
+    private final Map<Plugin, Object> plugins = new HashMap<>();
     private Method addUrl;
 
     public PluginManager() throws IOException {
