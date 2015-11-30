@@ -132,7 +132,7 @@ public class PluginManager {
                                 break;
                             }
                             if (instance instanceof PluginBase) {
-                                log.info("Loading {} {}", pl.name(), pl.version());
+                                log.info("Loaded {} {}", pl.name(), pl.version());
                                 PluginBase plugin = (PluginBase) instance;
                                 plugin.onEnable();
                                 plugins.put(pl, plugin);
