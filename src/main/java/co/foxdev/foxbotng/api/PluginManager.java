@@ -127,7 +127,7 @@ public class PluginManager {
                             try {
                                 instance = c.newInstance();
                             } catch (InstantiationException | IllegalAccessException e) {
-                                log.error("Error instantiating class " + c.getName(), e);
+                                log.error("Error instantiating class {}", c.getName(), e);
                                 break;
                             }
                             if (instance instanceof PluginBase) {
