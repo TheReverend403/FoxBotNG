@@ -57,7 +57,7 @@ public class PluginManager {
 
     private HashSet<String> getClasses(File file) {
         HashSet<String> found = new HashSet<>();
-        try(FileInputStream inFile = new FileInputStream(file.getAbsoluteFile())) {
+        try (FileInputStream inFile = new FileInputStream(file.getAbsoluteFile())) {
             try (ZipInputStream zip = new ZipInputStream(inFile)) {
                 for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
                     if (!entry.isDirectory() && entry.getName().endsWith(".class")) {
@@ -110,16 +110,16 @@ public class PluginManager {
                 Class c;
                 try {
                     c = this.getClass().getClassLoader().loadClass(className);
-                }catch(ClassNotFoundException e) {
+                } catch (ClassNotFoundException e) {
                     continue;
                 }
 
-                if(c.isAnnotationPresent(Plugin.class)){
+                if (c.isAnnotationPresent(Plugin.class)) {
                     log.debug("Found main class: {}", c.getName());
-                    for(Annotation annotation : c.getAnnotations()){
-                        if(annotation instanceof Plugin){
+                    for (Annotation annotation : c.getAnnotations()) {
+                        if (annotation instanceof Plugin) {
                             Plugin pl = (Plugin) annotation;
-                            if(plugins.containsKey(pl)){
+                            if (plugins.containsKey(pl)) {
                                 log.warn("Duplicate plugin name '{}', not loading.", pl.name());
                                 break;
                             }

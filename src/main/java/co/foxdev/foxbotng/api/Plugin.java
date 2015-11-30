@@ -26,7 +26,10 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Plugin {
     String author() default "No Author Given";
+
     String name() default "No Name Set";
+
     String version() default "No Version Information";
+
     String description() default "No Description Provided";
 }

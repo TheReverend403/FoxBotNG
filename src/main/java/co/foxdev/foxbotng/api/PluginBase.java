@@ -24,14 +24,15 @@ import org.slf4j.LoggerFactory;
 public abstract class PluginBase {
 
     public abstract void onEnable();
+
     public abstract void onDisable();
 
     private Logger log;
 
-    public Logger getLogger(){
+    public Logger getLogger() {
         if (log == null) {
             Plugin plugin = this.getClass().getAnnotation(Plugin.class);
-            if(plugin == null){
+            if (plugin == null) {
                 throw new IllegalArgumentException("Cannot call getLogger() on non-plugin annotated class.");
             }
             log = LoggerFactory.getLogger(plugin.name());
@@ -39,7 +40,7 @@ public abstract class PluginBase {
         return log;
     }
 
-    public FoxBotNG getBot(){
+    public FoxBotNG getBot() {
         return FoxBotNG.getInstance();
     }
 }
