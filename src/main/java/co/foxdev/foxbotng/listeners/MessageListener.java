@@ -25,6 +25,8 @@ import org.kitteh.irc.client.library.event.channel.ChannelMessageEvent;
 import org.kitteh.irc.client.library.event.user.PrivateCTCPQueryEvent;
 import org.kitteh.irc.lib.net.engio.mbassy.listener.Handler;
 
+import java.util.Locale;
+
 public class MessageListener {
     private static final FoxBotNG bot = FoxBotNG.getInstance();
 
@@ -41,9 +43,10 @@ public class MessageListener {
 
     @Handler
     public void onCtcp(PrivateCTCPQueryEvent event) {
+        String ctcpType = event.getMessage().toLowerCase(Locale.getDefault());
         ClientConfig clientConfig = bot.getClientManager().getConfig(event.getClient());
-        if (clientConfig.getBotCtcpReplies().containsKey(event.getMessage().toLowerCase())) {
-            event.setReply(clientConfig.getBotCtcpReplies().get(event.getMessage().toLowerCase()));
+        if (clientConfig.getBotCtcpReplies().containsKey(ctcpType)) {
+            event.setReply(clientConfig.getBotCtcpReplies().get(ctcpType));
         }
     }
 }

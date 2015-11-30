@@ -53,16 +53,11 @@ public class FoxBotNG {
     private DatabaseManager databaseManager;
 
     public FoxBotNG(String[] args) {
-        OptionParser parser = new OptionParser() {
-            {
-                acceptsAll(asList(ARG_SHORT_HELP, "help", "?"),
-                        "Prints this help screen.").forHelp();
-                acceptsAll(asList(ARG_SHORT_VERBOSE, "verbose"),
-                        "Enable debug for more verbose logging.");
-                acceptsAll(asList(ARG_SHORT_CONFIG, "config"),
-                        "Specify an alternate config file.").withRequiredArg().ofType(File.class);
-            }
-        };
+        OptionParser parser = new OptionParser();
+        parser.acceptsAll(asList(ARG_SHORT_HELP, "help", "?"), "Prints this help screen.").forHelp();
+        parser.acceptsAll(asList(ARG_SHORT_VERBOSE, "verbose"), "Enable debug for more verbose logging.");
+        parser.acceptsAll(asList(ARG_SHORT_CONFIG, "config"), "Specify an alternate config file.")
+                .withRequiredArg().ofType(File.class);
         OptionSet options = parser.parse(args);
 
         if (options.has(ARG_SHORT_HELP)) {

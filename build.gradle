@@ -71,6 +71,8 @@ jar {
 findbugs {
     ignoreFailures = true
     toolVersion = '3.0.1'
+    effort = "max"
+    reportLevel = "low"
     sourceSets = [sourceSets.main]
     reportsDir = file("$project.buildDir/reports/findbugs")
 }
