@@ -14,8 +14,11 @@ bots {
             // The host to connect to.
             host: i.forgot.to.configure.my.bot
             port: 6667
-            // Whether to use SSL. Read the readme to learn how to make this work with self-signed/untrusted certificates.
+            // Whether to use SSL.
             ssl: false
+            // Whether to verify the server's SSL certificate.
+            // Setting this to false is dangerous, consider adding the cert to your Java trust store instead.
+            verify-ssl: true
             // A list of channels to connect to on startup.
             channels: ["#foxdev"]
             // An optional password in case the server requires it

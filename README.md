@@ -16,17 +16,3 @@ Requires Java 8.
 * java -jar FoxBotNG.jar
 
 Note: Your jar may be named differently depending on whether you compiled from source or downloaded a binary. Generally, source builds are found in build/libs/.
-
-# Untrusted SSL Certificates
-
-To use untrusted or self-signed certificates with this bot, you must add the certificate to Java's keystore. There is no config option that will allow you to accept any certificate as this is incredibly insecure.
-
-To retrieve a certificate and add it to your keystore, use the following commands.
-
-```bash
-HOST=irc.example.com # change this
-PORT=6697 # also maybe change this, but usually not
-openssl s_client -connect $HOST:$PORT -showcerts 2>&1 < /dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sed -ne '1,/-END CERTIFICATE-/p' > irc-cert.pem
-sudo keytool -import -alias dev-server -keystore $JAVA_HOME/jre/lib/security/cacerts -file irc-cert.pem
-# You will be asked for a keystore password here. It is 'changeit' by default.
-```

@@ -22,6 +22,8 @@ import co.foxdev.foxbotng.listeners.MessageListener;
 import co.foxdev.foxbotng.listeners.ServerListener;
 import lombok.extern.slf4j.Slf4j;
 import org.kitteh.irc.client.library.Client;
+import org.kitteh.irc.client.library.ClientBuilder;
+import org.kitteh.irc.client.library.util.AcceptingTrustManagerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,13 +53,21 @@ public class ClientManager {
     public Client buildClient(ClientConfig config) {
         log.info("Creating client for {}", config.getServerHost());
 
-        Client client = Client.builder().nick(config.getBotNick())
+        ClientBuilder clientBuilder = Client.builder().nick(config.getBotNick())
                 .user(config.getBotIdent())
                 .realName(config.getBotRealname())
                 .serverHost(config.getServerHost())
                 .serverPort(config.getServerPort())
                 .secure(config.isServerSsl())
-                .serverPassword(config.getServerPassword()).build();
+                .serverPassword(config.getServerPassword());
+
+        if (!config.isVerifySsl() && config.isServerSsl()) {
+            log.warn("NOT VERIFYING SERVER SSL CERTIFICATE");
+            log.warn("This is dangerous, consider adding the server certificate to your Java trust store instead.");
+            clientBuilder.secureTrustManagerFactory(new AcceptingTrustManagerFactory());
+        }
+
+        Client client = clientBuilder.build();
 
         clientConfigs.put(client, config);
         client.getEventManager().registerEventListener(new MessageListener());

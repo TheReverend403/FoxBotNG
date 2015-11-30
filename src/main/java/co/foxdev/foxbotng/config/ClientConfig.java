@@ -43,6 +43,8 @@ public class ClientConfig {
     @Getter
     private final boolean serverSsl;
     @Getter
+    private final boolean verifySsl;
+    @Getter
     private final String serverPassword;
     @Getter
     private final List<String> channels;
@@ -70,6 +72,7 @@ public class ClientConfig {
         this.serverHost = serverConfig.getString("host");
         this.serverPort = serverConfig.getInt("port");
         this.serverSsl = serverConfig.getBoolean("ssl");
+        this.verifySsl = serverConfig.getBoolean("verify-ssl");
         this.serverPassword = serverConfig.getString("password");
         this.channels = serverConfig.getStringList("channels");
     }
