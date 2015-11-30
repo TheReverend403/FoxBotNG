@@ -18,8 +18,7 @@
 package co.foxdev.foxbotng.listeners;
 
 import lombok.extern.slf4j.Slf4j;
-import org.kitteh.irc.client.library.element.ServerMessage;
-import org.kitteh.irc.client.library.event.helper.ServerMessageEvent;
+import org.kitteh.irc.client.library.event.helper.ClientReceiveServerMessageEvent;
 import org.kitteh.irc.lib.net.engio.mbassy.listener.Handler;
 
 @Slf4j
@@ -28,9 +27,7 @@ public class ServerListener {
      * Logs every damn thing.
      */
     @Handler
-    public void onRawLine(ServerMessageEvent event) {
-        for (ServerMessage message : event.getOriginalMessages()) {
-            log.info(message.getMessage());
-        }
+    public void onRawLine(ClientReceiveServerMessageEvent event) {
+        log.info(event.getOriginalMessage());
     }
 }

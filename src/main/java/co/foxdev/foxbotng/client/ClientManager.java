@@ -53,7 +53,7 @@ public class ClientManager {
      * @return a connected Client
      */
     public Client buildClient(ClientConfig config) {
-        log.info("Creating client for {}", config.getServerHost());
+        log.info("Connecting {} to {}", config.getBotNick(), config.getServerHost());
 
         ClientBuilder clientBuilder = Client.builder().nick(config.getBotNick())
                 .user(config.getBotIdent())

@@ -36,7 +36,7 @@ import java.io.IOException;
 import static java.util.Arrays.asList;
 
 @Slf4j
-public class FoxBotNG {
+public final class FoxBotNG {
     // Constants for short versions of jopt args
     private static final String ARG_SHORT_HELP = "h";
     private static final String ARG_SHORT_VERBOSE = "v";
@@ -52,8 +52,9 @@ public class FoxBotNG {
     @Getter
     private DatabaseManager databaseManager;
 
-    public FoxBotNG(String[] args) {
-        instance = this;
+    private FoxBotNG() {}
+
+    private void init(String[] args) {
         OptionParser parser = new OptionParser();
         parser.acceptsAll(asList(ARG_SHORT_HELP, "help", "?"), "Prints this help screen.").forHelp();
         parser.acceptsAll(asList(ARG_SHORT_VERBOSE, "verbose"), "Enable debug for more verbose logging.");
@@ -70,8 +71,6 @@ public class FoxBotNG {
             return;
         }
 
-        log.info("Starting {} {}", "FoxBotNG", getClass().getPackage().getImplementationVersion());
-
         if (options.has(ARG_SHORT_VERBOSE)) {
             Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
             root.setLevel(Level.DEBUG);
@@ -84,7 +83,6 @@ public class FoxBotNG {
         } else {
             configManager = new ConfigManager();
         }
-
         // Initialise config and create defaults if needed
         try {
             configManager.initConfig();
@@ -114,7 +112,17 @@ public class FoxBotNG {
         }
     }
 
+    // Inspired by https://hub.spigotmc.org/stash/projects/SPIGOT/repos/bukkit/browse/src/main/java/org/bukkit/Bukkit.java#72
+    private static void setInstance(FoxBotNG instance) {
+        if (FoxBotNG.instance != null) {
+            throw new UnsupportedOperationException("Cannot redefine singleton FoxBotNG");
+        }
+        FoxBotNG.instance = instance;
+        log.info("Starting {} {}", "FoxBotNG", instance.getClass().getPackage().getImplementationVersion());
+    }
+
     public static void main(final String[] args) {
-        new FoxBotNG(args);
+        setInstance(new FoxBotNG());
+        instance.init(args);
     }
 }

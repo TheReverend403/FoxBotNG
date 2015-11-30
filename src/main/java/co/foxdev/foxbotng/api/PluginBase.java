@@ -18,16 +18,18 @@
 package co.foxdev.foxbotng.api;
 
 import co.foxdev.foxbotng.FoxBotNG;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class PluginBase {
+    private Logger log;
+    @Getter
+    private final FoxBotNG bot = FoxBotNG.getInstance();
 
     public abstract void onEnable();
 
     public abstract void onDisable();
-
-    private Logger log;
 
     public Logger getLogger() {
         if (log == null) {
@@ -38,9 +40,5 @@ public abstract class PluginBase {
             log = LoggerFactory.getLogger(plugin.name());
         }
         return log;
-    }
-
-    public FoxBotNG getBot() {
-        return FoxBotNG.getInstance();
     }
 }
