@@ -19,9 +19,6 @@ package co.foxdev.foxbotng.listeners;
 
 import co.foxdev.foxbotng.FoxBotNG;
 import co.foxdev.foxbotng.config.ClientConfig;
-import co.foxdev.foxbotng.utils.UrlExtractor;
-import org.kitteh.irc.client.library.element.Channel;
-import org.kitteh.irc.client.library.event.channel.ChannelMessageEvent;
 import org.kitteh.irc.client.library.event.user.PrivateCTCPQueryEvent;
 import org.kitteh.irc.lib.net.engio.mbassy.listener.Handler;
 
@@ -29,17 +26,6 @@ import java.util.Locale;
 
 public class MessageListener {
     private static final FoxBotNG bot = FoxBotNG.getInstance();
-
-    @Handler
-    public void onChannelMessage(ChannelMessageEvent event) {
-        Channel channel = event.getChannel();
-
-        String url;
-        if ((url = UrlExtractor.getFrom(event.getMessage())) != null) {
-            String message = UrlExtractor.parseUrlForTitle(url);
-            channel.sendMessage(String.format("[ %s ] - %s", message, url.replaceAll(".*://", "")));
-        }
-    }
 
     @Handler
     public void onCtcp(PrivateCTCPQueryEvent event) {
