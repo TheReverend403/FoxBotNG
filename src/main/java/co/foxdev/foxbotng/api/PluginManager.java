@@ -18,7 +18,6 @@
 package co.foxdev.foxbotng.api;
 
 import co.foxdev.foxbotng.FoxBotNG;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -29,17 +28,13 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 @Slf4j
 public class PluginManager {
     private static final FileFilter JAR_FILE_FILTER = pathname -> pathname.getAbsolutePath().endsWith(".jar");
-    @Getter
     private final Map<Plugin, Object> plugins = new HashMap<>();
     private Method addUrl;
 
@@ -124,6 +119,7 @@ public class PluginManager {
                                 log.warn("Duplicate plugin name '{}', not loading.", pl.name());
                                 break;
                             }
+
                             Object instance;
                             try {
                                 instance = c.newInstance();
@@ -131,6 +127,7 @@ public class PluginManager {
                                 log.error("Error instantiating class {}", c.getName(), ex);
                                 break;
                             }
+
                             if (instance instanceof PluginBase) {
                                 log.info("Loaded {} {}", pl.name(), pl.version());
                                 PluginBase plugin = (PluginBase) instance;
@@ -143,6 +140,14 @@ public class PluginManager {
                 }
             }
         }
+    }
+
+    /**
+     * Returns an unmodifiable copy of the bot's plugins list.
+     * @return Unmodifiable copy of a Map<Plugin, Object>
+     */
+    public final Map<Plugin, Object> getPlugins() {
+        return Collections.unmodifiableMap(plugins);
     }
 
     private class PluginShutdownHook extends Thread {
