@@ -1,5 +1,6 @@
 package co.foxdev.foxbotng.api;
 
+import co.foxdev.foxbotng.FoxBotNG;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,5 +27,9 @@ public abstract class PluginBase {
         }else {
             return logger;
         }
+    }
+
+    public FoxBotNG getBot(){
+        return FoxBotNG.getInstance();
     }
 }

@@ -101,17 +101,17 @@ public class FoxBotNG {
             return;
         }
 
-        try {
-            pluginManager = new PluginManager();
-        } catch (Exception ex) {
-            log.error("Error while loading PluginManager", ex);
-            return;
-        }
-
         // Actually create and connect the bot(s)
         clientManager = new ClientManager();
         for (ClientConfig clientConfig : configManager.getClientConfigs()) {
             clientManager.buildClient(clientConfig);
+        }
+
+        try {
+            pluginManager = new PluginManager();
+        } catch (Exception ex) {
+            log.error("Error while loading PluginManager", ex);
+            System.exit(1);
         }
     }
 
