@@ -67,6 +67,11 @@ public class ClientManager {
         return client;
     }
 
+    /**
+     * Retreives a set of KittehIRCClientLib Client objects representing server connections.
+     *
+     * @return all clients the bot has.
+     */
     public Set<Client> getClients(){
         return clientConfigs.keySet();
     }
