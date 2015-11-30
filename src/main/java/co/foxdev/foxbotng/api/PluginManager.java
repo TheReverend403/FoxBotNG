@@ -31,6 +31,7 @@ import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -38,19 +39,22 @@ import java.util.zip.ZipInputStream;
 public class PluginManager {
     private static final FileFilter JAR_FILE_FILTER = pathname -> pathname.getAbsolutePath().endsWith(".jar");
     @Getter
-    public Map<String, Plugin> plugins;
+    private Map<String, Plugin> plugins = new HashMap<>();
+    private Method addUrl;
 
     public PluginManager() throws IOException {
         loadClasses();
     }
 
-    private static void loadFile(File file) throws Exception {
-        Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
-        method.setAccessible(true);
-        method.invoke(ClassLoader.getSystemClassLoader(), file.toURI().toURL());
+    private void loadFile(File file) throws Exception {
+        if (addUrl == null) {
+            addUrl = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
+            addUrl.setAccessible(true);
+        }
+        addUrl.invoke(ClassLoader.getSystemClassLoader(), file.toURI().toURL());
     }
 
-    public HashSet<String> getClasses(File file) {
+    private HashSet<String> getClasses(File file) {
         HashSet<String> found = new HashSet<>();
         try(FileInputStream inFile = new FileInputStream(file.getAbsoluteFile())) {
             try (ZipInputStream zip = new ZipInputStream(inFile)) {
@@ -69,14 +73,17 @@ public class PluginManager {
         return found;
     }
 
-    public void loadClasses() throws IOException {
+    private void loadClasses() throws IOException {
         FoxBotNG bot = FoxBotNG.getInstance();
+
         File pluginsDir = new File(bot.getConfigManager().getConfigDir(), "plugins");
         if (!pluginsDir.exists() && !pluginsDir.mkdirs()) {
             throw new IOException("Could not create plugin directory.");
         }
 
-        HashMap<File, HashSet<String>> jarData = new HashMap<>();
+        log.debug("Plugin directory is {}", pluginsDir.getAbsolutePath());
+
+        Map<File, HashSet<String>> jarData = new HashMap<>();
         File[] jarFiles;
         if ((jarFiles = pluginsDir.listFiles(JAR_FILE_FILTER)) == null) {
             log.debug("No jar files found in {}", pluginsDir.getAbsolutePath());
@@ -84,19 +91,20 @@ public class PluginManager {
         }
 
         for (File file : jarFiles) {
-            log.debug("Scanning jar {} for classes.", file.getName());
+            log.debug("Scanning {} for classes.", file.getName());
             HashSet<String> classes = getClasses(file);
             jarData.put(file, classes);
-            log.debug("Found {} class files in jar.", classes.size());
+            log.debug("Found {} class files in {}.", classes.size(), file.getName());
+
             try {
                 loadFile(file);
             } catch (Exception e) {
-                log.error("Error loading {}", file.getAbsolutePath());
+                log.error("Error loading {}", file.getName());
             }
         }
 
         for (Map.Entry<File, HashSet<String>> entry : jarData.entrySet()) {
-            HashSet<String> classNames = entry.getValue();
+            Set<String> classNames = entry.getValue();
             for (String className : classNames) {
                 Class c;
                 try {
@@ -106,7 +114,8 @@ public class PluginManager {
                 }
 
                 if (c.isAnnotationPresent(Plugin.class)) {
-                    log.debug("Main class: {}", c.getName());
+                    log.debug("Found main class: {}", c.getName());
+
                     Object plugin;
                     try {
                         plugin = c.newInstance();
@@ -114,11 +123,18 @@ public class PluginManager {
                         log.error("Error while loading class {}, not loading plugin.", c.getName(), ex);
                         continue;
                     }
+
                     Plugin pl = plugin.getClass().getAnnotation(Plugin.class);
+                    if (plugins.containsKey(pl.name())) {
+                        log.warn("Duplicate plugin name '{}', not loading.", pl.name());
+                        return;
+                    }
+
+                    plugins.put(pl.name(), pl);
                     log.info("Loaded plugin {}", pl.name());
+                    return;
                 }
             }
         }
     }
-
 }
