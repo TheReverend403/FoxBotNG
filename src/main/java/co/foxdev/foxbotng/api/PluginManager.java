@@ -105,8 +105,8 @@ public class PluginManager {
         }
 
         for (Map.Entry<File, HashSet<String>> entry : jarData.entrySet()) {
-            HashSet<String> classnames = entry.getValue();
-            for (String classname : classnames) {
+            Set<String> classNames = entry.getValue();
+            for (String classname : classNames) {
                 Class c;
                 try {
                     c = this.getClass().getClassLoader().loadClass(classname);
@@ -123,18 +123,17 @@ public class PluginManager {
                                 log.warn("Duplicate plugin name '{}', not loading.", pl.name());
                                 break;
                             }
-                            Object instance = null;
                             try {
-                                instance = c.newInstance();
+                                Object instance = c.newInstance();
+                                if (instance instanceof PluginBase) {
+                                    log.info("Loading {} v{} ({})", pl.name(), pl.version(), pl.author());
+                                    PluginBase plugin = (PluginBase) instance;
+                                    plugin.onEnable();
+                                    plugins.put(pl, plugin);
+                                    break;
+                                }
                             } catch (InstantiationException | IllegalAccessException e) {
                                 log.error("Error instantiating class " + c.getName(), e);
-                            }
-                            if(instance instanceof PluginBase){
-                                log.info(String.format("Loading %s v%s (%s)", pl.name(), pl.version(), pl.author()));
-                                PluginBase plugin = (PluginBase) instance;
-                                plugin.onEnable();
-                                plugins.put(pl, plugin);
-                                break;
                             }
                         }
                     }
