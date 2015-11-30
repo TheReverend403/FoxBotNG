@@ -72,7 +72,6 @@ public class ClientManager {
         clientConfigs.put(client, config);
         client.getEventManager().registerEventListener(new MessageListener());
         client.getEventManager().registerEventListener(new ServerListener());
-
         config.getChannels().forEach(client::addChannel);
         return client;
     }
@@ -84,5 +83,15 @@ public class ClientManager {
      */
     public Set<Client> getClients(){
         return clientConfigs.keySet();
+    }
+
+    /**
+     * Registers an event listener to all clients.
+     * @param listener The listener to register.
+     */
+    public void registerListener(Object listener) {
+        for (Client client : getClients()) {
+            client.getEventManager().registerEventListener(listener);
+        }
     }
 }
