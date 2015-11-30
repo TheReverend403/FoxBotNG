@@ -35,6 +35,7 @@ public class ClientManager {
 
     /**
      * Gets a raw ClientConfig object to retrieve Client settings from.
+     *
      * @param client The Client to get settings for
      * @return The ClientConfig for the passed Client parameter
      */
@@ -47,6 +48,7 @@ public class ClientManager {
 
     /**
      * Builds a KittehIRCClientLib client and connects it.
+     *
      * @param config ClientConfig this client gets its settings from
      * @return a connected Client
      */
@@ -81,17 +83,18 @@ public class ClientManager {
      *
      * @return all clients the bot has.
      */
-    public Set<Client> getClients(){
+    public Set<Client> getClients() {
         return clientConfigs.keySet();
     }
 
     /**
      * Registers an event listener to all clients.
+     *
      * @param listener The listener to register.
      */
     public void registerListener(Object listener) {
-        for (Client client : getClients()) {
-            client.getEventManager().registerEventListener(listener);
-        }
+        getClients().stream().filter(
+                client -> !client.getEventManager().getRegisteredEventListeners().contains(listener)).forEach(
+                client -> client.getEventManager().registerEventListener(listener));
     }
 }
