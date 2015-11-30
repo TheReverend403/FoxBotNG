@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -39,7 +40,7 @@ import java.util.zip.ZipInputStream;
 public class PluginManager {
     private static final FileFilter JAR_FILE_FILTER = pathname -> pathname.getAbsolutePath().endsWith(".jar");
     @Getter
-    private Map<String, Plugin> plugins = new HashMap<>();
+    private Map<Plugin, Object> plugins = new HashMap<>();
     private Method addUrl;
 
     public PluginManager() throws IOException {
@@ -104,35 +105,39 @@ public class PluginManager {
         }
 
         for (Map.Entry<File, HashSet<String>> entry : jarData.entrySet()) {
-            Set<String> classNames = entry.getValue();
-            for (String className : classNames) {
+            HashSet<String> classnames = entry.getValue();
+            for (String classname : classnames) {
                 Class c;
                 try {
-                    c = this.getClass().getClassLoader().loadClass(className);
-                } catch (ClassNotFoundException e) {
+                    c = this.getClass().getClassLoader().loadClass(classname);
+                }catch(ClassNotFoundException e) {
                     continue;
                 }
 
-                if (c.isAnnotationPresent(Plugin.class)) {
+                if(c.isAnnotationPresent(Plugin.class)){
                     log.debug("Found main class: {}", c.getName());
-
-                    Object plugin;
-                    try {
-                        plugin = c.newInstance();
-                    } catch (InstantiationException | IllegalAccessException ex) {
-                        log.error("Error while loading class {}, not loading plugin.", c.getName(), ex);
-                        continue;
+                    for(Annotation annotation : c.getAnnotations()){
+                        if(annotation instanceof Plugin){
+                            Plugin pl = (Plugin) annotation;
+                            if(plugins.containsKey(pl)){
+                                log.warn("Duplicate plugin name '{}', not loading.", pl.name());
+                                break;
+                            }
+                            Object instance = null;
+                            try {
+                                instance = c.newInstance();
+                            } catch (InstantiationException | IllegalAccessException e) {
+                                log.error("Error instantiating class " + c.getName(), e);
+                            }
+                            if(instance instanceof PluginBase){
+                                log.info(String.format("Loading %s v%s (%s)", pl.name(), pl.version(), pl.author()));
+                                PluginBase plugin = (PluginBase) instance;
+                                plugin.onEnable();
+                                plugins.put(pl, plugin);
+                                break;
+                            }
+                        }
                     }
-
-                    Plugin pl = plugin.getClass().getAnnotation(Plugin.class);
-                    if (plugins.containsKey(pl.name())) {
-                        log.warn("Duplicate plugin name '{}', not loading.", pl.name());
-                        return;
-                    }
-
-                    plugins.put(pl.name(), pl);
-                    log.info("Loaded plugin {}", pl.name());
-                    return;
                 }
             }
         }
