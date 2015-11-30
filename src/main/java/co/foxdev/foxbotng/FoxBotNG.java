@@ -111,6 +111,7 @@ public class FoxBotNG {
             pluginManager = new PluginManager();
         } catch (Exception ex) {
             log.error("Error while loading PluginManager", ex);
+            //exit vm if the plugin manager won't load.
             System.exit(1);
         }
     }
