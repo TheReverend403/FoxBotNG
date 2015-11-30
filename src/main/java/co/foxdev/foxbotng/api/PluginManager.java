@@ -123,7 +123,7 @@ public class PluginManager {
                                 log.warn("Duplicate plugin name '{}', not loading.", pl.name());
                                 break;
                             }
-                            Object instance = null;
+                            Object instance;
                             try {
                                 instance = c.newInstance();
                             } catch (InstantiationException | IllegalAccessException e) {
