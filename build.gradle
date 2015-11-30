@@ -75,4 +75,5 @@ findbugs {
     reportLevel = "low"
     sourceSets = [sourceSets.main]
     reportsDir = file("$project.buildDir/reports/findbugs")
+    visitors = ["FindSqlInjection"]
 }
