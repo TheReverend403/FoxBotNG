@@ -144,8 +144,7 @@ public class PluginManager {
             }
         }
     }
-
-    @Getter
+    
     private class PluginShutdownHook extends Thread {
         public void run() {
             for (Plugin plugin : plugins.keySet()) {
