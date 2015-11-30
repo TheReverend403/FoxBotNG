@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -39,7 +40,7 @@ import java.util.zip.ZipInputStream;
 public class PluginManager {
     private static final FileFilter JAR_FILE_FILTER = pathname -> pathname.getAbsolutePath().endsWith(".jar");
     @Getter
-    private Map<String, Plugin> plugins = new HashMap<>();
+    private Map<Plugin, Object> plugins = new HashMap<>();
     private Method addUrl;
 
     public PluginManager() throws IOException {
@@ -56,7 +57,7 @@ public class PluginManager {
 
     private HashSet<String> getClasses(File file) {
         HashSet<String> found = new HashSet<>();
-        try(FileInputStream inFile = new FileInputStream(file.getAbsoluteFile())) {
+        try (FileInputStream inFile = new FileInputStream(file.getAbsoluteFile())) {
             try (ZipInputStream zip = new ZipInputStream(inFile)) {
                 for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
                     if (!entry.isDirectory() && entry.getName().endsWith(".class")) {
@@ -83,7 +84,7 @@ public class PluginManager {
 
         log.debug("Plugin directory is {}", pluginsDir.getAbsolutePath());
 
-        Map<File, HashSet<String>> jarData = new HashMap<>();
+        Map<File, Set<String>> jarData = new HashMap<>();
         File[] jarFiles;
         if ((jarFiles = pluginsDir.listFiles(JAR_FILE_FILTER)) == null) {
             log.debug("No jar files found in {}", pluginsDir.getAbsolutePath());
@@ -92,47 +93,52 @@ public class PluginManager {
 
         for (File file : jarFiles) {
             log.debug("Scanning {} for classes.", file.getName());
-            HashSet<String> classes = getClasses(file);
+            Set<String> classes = getClasses(file);
             jarData.put(file, classes);
             log.debug("Found {} class files in {}.", classes.size(), file.getName());
 
             try {
                 loadFile(file);
-            } catch (Exception e) {
-                log.error("Error loading {}", file.getName());
+            } catch (Exception ex) {
+                log.error("Error loading {}", file.getName(), ex);
             }
         }
 
-        for (Map.Entry<File, HashSet<String>> entry : jarData.entrySet()) {
+        for (Map.Entry<File, Set<String>> entry : jarData.entrySet()) {
             Set<String> classNames = entry.getValue();
             for (String className : classNames) {
                 Class c;
                 try {
                     c = this.getClass().getClassLoader().loadClass(className);
-                } catch (ClassNotFoundException e) {
+                } catch (ClassNotFoundException ex) {
                     continue;
                 }
 
                 if (c.isAnnotationPresent(Plugin.class)) {
                     log.debug("Found main class: {}", c.getName());
-
-                    Object plugin;
-                    try {
-                        plugin = c.newInstance();
-                    } catch (InstantiationException | IllegalAccessException ex) {
-                        log.error("Error while loading class {}, not loading plugin.", c.getName(), ex);
-                        continue;
+                    for (Annotation annotation : c.getAnnotations()) {
+                        if (annotation instanceof Plugin) {
+                            Plugin pl = (Plugin) annotation;
+                            if (plugins.containsKey(pl)) {
+                                log.warn("Duplicate plugin name '{}', not loading.", pl.name());
+                                break;
+                            }
+                            Object instance;
+                            try {
+                                instance = c.newInstance();
+                            } catch (InstantiationException | IllegalAccessException ex) {
+                                log.error("Error instantiating class {}", c.getName(), ex);
+                                break;
+                            }
+                            if (instance instanceof PluginBase) {
+                                log.info("Loading {} v{} ({})", pl.name(), pl.version(), pl.author());
+                                PluginBase plugin = (PluginBase) instance;
+                                plugin.onEnable();
+                                plugins.put(pl, plugin);
+                                break;
+                            }
+                        }
                     }
-
-                    Plugin pl = plugin.getClass().getAnnotation(Plugin.class);
-                    if (plugins.containsKey(pl.name())) {
-                        log.warn("Duplicate plugin name '{}', not loading.", pl.name());
-                        return;
-                    }
-
-                    plugins.put(pl.name(), pl);
-                    log.info("Loaded plugin {}", pl.name());
-                    return;
                 }
             }
         }

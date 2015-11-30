@@ -17,19 +17,30 @@
 
 package co.foxdev.foxbotng.api;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import co.foxdev.foxbotng.FoxBotNG;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Plugin {
-    String author() default "No Author Given";
+public abstract class PluginBase {
 
-    String name() default "No Name Set";
+    public abstract void onEnable();
 
-    String version() default "No Version Information";
+    public abstract void onDisable();
 
-    String description() default "No Description Provided";
+    private Logger log;
+
+    public Logger getLogger() {
+        if (log == null) {
+            Plugin plugin = this.getClass().getAnnotation(Plugin.class);
+            if (plugin == null) {
+                throw new IllegalArgumentException("Cannot call getLogger() on non-plugin annotated class.");
+            }
+            log = LoggerFactory.getLogger(plugin.name());
+        }
+        return log;
+    }
+
+    public FoxBotNG getBot() {
+        return FoxBotNG.getInstance();
+    }
 }
