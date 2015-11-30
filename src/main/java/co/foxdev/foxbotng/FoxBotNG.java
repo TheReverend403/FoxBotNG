@@ -19,8 +19,6 @@ package co.foxdev.foxbotng;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
-import co.foxdev.foxbotng.api.Plugin;
-import co.foxdev.foxbotng.api.PluginBase;
 import co.foxdev.foxbotng.api.PluginManager;
 import co.foxdev.foxbotng.client.ClientManager;
 import co.foxdev.foxbotng.config.ClientConfig;
@@ -113,18 +111,6 @@ public class FoxBotNG {
             pluginManager = new PluginManager();
         } catch (Exception ex) {
             log.error("Error while loading PluginManager", ex);
-        }
-
-        Runtime.getRuntime().addShutdownHook(new PluginShutdownHook());
-    }
-
-    private class PluginShutdownHook extends Thread {
-        public void run() {
-            for (Plugin plugin : pluginManager.getPlugins().keySet()) {
-                log.debug("PluginShutdownHook triggered.");
-                log.info("Disabling {} {}", plugin.name(), plugin.version());
-                ((PluginBase) pluginManager.getPlugins().get(plugin)).onDisable();
-            }
         }
     }
 

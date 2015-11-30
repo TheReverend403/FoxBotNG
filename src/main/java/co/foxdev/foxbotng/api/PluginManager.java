@@ -44,7 +44,8 @@ public class PluginManager {
     private Method addUrl;
 
     public PluginManager() throws IOException {
-        loadClasses();
+        loadPlugins();
+        Runtime.getRuntime().addShutdownHook(new PluginShutdownHook());
     }
 
     private void loadFile(File file) throws Exception {
@@ -74,7 +75,7 @@ public class PluginManager {
         return found;
     }
 
-    private void loadClasses() throws IOException {
+    private void loadPlugins() throws IOException {
         FoxBotNG bot = FoxBotNG.getInstance();
 
         File pluginsDir = new File(bot.getConfigManager().getConfigDir(), "plugins");
@@ -140,6 +141,17 @@ public class PluginManager {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    @Getter
+    private class PluginShutdownHook extends Thread {
+        public void run() {
+            for (Plugin plugin : plugins.keySet()) {
+                log.debug("PluginShutdownHook triggered.");
+                log.info("Disabling {} {}", plugin.name(), plugin.version());
+                ((PluginBase) plugins.get(plugin)).onDisable();
             }
         }
     }
