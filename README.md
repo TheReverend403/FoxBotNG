@@ -19,4 +19,4 @@ Note: Your jar may be named differently depending on whether you compiled from s
 
 # Contact
 
-Interested in contributing, want some help or just have some questions? Join us on [irc.foxdev.co in #foxdev](https://webchat.foxdev.co/?channels=foxdev)
+Interested in contributing, want some help or just have some questions? Join us on [irc.foxdev.co in #foxbot](https://webchat.foxdev.co/?channels=foxbot)
