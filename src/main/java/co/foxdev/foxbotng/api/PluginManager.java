@@ -84,7 +84,7 @@ public class PluginManager {
 
         log.debug("Plugin directory is {}", pluginsDir.getAbsolutePath());
 
-        Map<File, HashSet<String>> jarData = new HashMap<>();
+        Map<File, Set<String>> jarData = new HashMap<>();
         File[] jarFiles;
         if ((jarFiles = pluginsDir.listFiles(JAR_FILE_FILTER)) == null) {
             log.debug("No jar files found in {}", pluginsDir.getAbsolutePath());
@@ -93,7 +93,7 @@ public class PluginManager {
 
         for (File file : jarFiles) {
             log.debug("Scanning {} for classes.", file.getName());
-            HashSet<String> classes = getClasses(file);
+            Set<String> classes = getClasses(file);
             jarData.put(file, classes);
             log.debug("Found {} class files in {}.", classes.size(), file.getName());
 
@@ -104,12 +104,12 @@ public class PluginManager {
             }
         }
 
-        for (Map.Entry<File, HashSet<String>> entry : jarData.entrySet()) {
+        for (Map.Entry<File, Set<String>> entry : jarData.entrySet()) {
             Set<String> classNames = entry.getValue();
-            for (String classname : classNames) {
+            for (String className : classNames) {
                 Class c;
                 try {
-                    c = this.getClass().getClassLoader().loadClass(classname);
+                    c = this.getClass().getClassLoader().loadClass(className);
                 }catch(ClassNotFoundException e) {
                     continue;
                 }
