@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'findbugs'
-    id 'com.github.johnrengelman.shadow' version '1.2.2'
+    id 'com.github.johnrengelman.shadow' version '1.2.3'
     id "info.robotbrain.lombok" version "1.1"
 }
 
