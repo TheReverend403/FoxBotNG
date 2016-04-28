@@ -22,7 +22,6 @@ import co.foxdev.foxbotng.listeners.MessageListener;
 import co.foxdev.foxbotng.listeners.ServerListener;
 import lombok.extern.slf4j.Slf4j;
 import org.kitteh.irc.client.library.Client;
-import org.kitteh.irc.client.library.ClientBuilder;
 import org.kitteh.irc.client.library.util.AcceptingTrustManagerFactory;
 
 import java.util.HashMap;
@@ -55,7 +54,7 @@ public class ClientManager {
     public Client buildClient(ClientConfig config) {
         log.info("Connecting {} to {}", config.getBotNick(), config.getServerHost());
 
-        ClientBuilder clientBuilder = Client.builder().nick(config.getBotNick())
+        Client.Builder clientBuilder = Client.builder().nick(config.getBotNick())
                 .user(config.getBotIdent())
                 .realName(config.getBotRealname())
                 .serverHost(config.getServerHost())
