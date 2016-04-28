@@ -60,7 +60,8 @@ public class ClientManager {
                 .serverHost(config.getServerHost())
                 .serverPort(config.getServerPort())
                 .secure(config.isServerSsl())
-                .serverPassword(config.getServerPassword());
+                .serverPassword(config.getServerPassword())
+                .messageDelay(0);
 
         if (!config.isVerifySsl() && config.isServerSsl()) {
             log.warn("NOT VERIFYING SERVER SSL CERTIFICATE");
