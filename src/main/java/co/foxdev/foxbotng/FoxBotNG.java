@@ -23,7 +23,6 @@ import co.foxdev.foxbotng.api.PluginManager;
 import co.foxdev.foxbotng.client.ClientManager;
 import co.foxdev.foxbotng.config.ClientConfig;
 import co.foxdev.foxbotng.config.ConfigManager;
-import co.foxdev.foxbotng.database.DatabaseManager;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import lombok.Getter;
@@ -49,8 +48,6 @@ public final class FoxBotNG {
     private ConfigManager configManager;
     @Getter
     private ClientManager clientManager;
-    @Getter
-    private DatabaseManager databaseManager;
 
     private FoxBotNG() {}
 
@@ -88,14 +85,6 @@ public final class FoxBotNG {
             configManager.initConfig();
         } catch (IOException ex) {
             log.error("Error while loading config", ex);
-            return;
-        }
-
-        databaseManager = new DatabaseManager();
-        try {
-            databaseManager.init();
-        } catch (IOException ex) {
-            log.error("Error while loading DatabaseManager", ex);
             return;
         }
 

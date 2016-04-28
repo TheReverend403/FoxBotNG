@@ -53,7 +53,7 @@ public class ClientConfig {
      * Builds a ClientConfig
      * @param config A TypeSafe Config library Config object to get settings from
      */
-    public ClientConfig(String clientName, Config config) {
+    ClientConfig(String clientName, Config config) {
         this.clientName = clientName;
 
         // Bot
